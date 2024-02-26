@@ -1,25 +1,28 @@
 package main
 
 import (
-	"GoEdu/proto/ping"
 	"context"
-	"google.golang.org/grpc"
 	"log"
 	"net"
+
+	"google.golang.org/grpc"
+
+	"GoEdu/proto/ping"
 )
 
 type server struct {
+	ping.UnimplementedPingServiceServer
 }
 
 func (s *server) Ping(ctx context.Context, p *ping.PingRequest) (*ping.PingResponse, error) {
-	println("REQUEST MESSAGE:", p.Message)
+	log.Println("REQUEST MESSAGE:", p.Message)
 	return &ping.PingResponse{Message: "Pong"}, nil
 }
 
 func main() {
-	lis, err := net.Listen("tcp", ":8000")
-	if err != nil {
-		log.Fatal(err)
+	lis, errLis := net.Listen("tcp", "127.0.0.1:8000")
+	if errLis != nil {
+		log.Fatal(errLis)
 	}
 	grpcServer := grpc.NewServer()
 	ping.RegisterPingServiceServer(grpcServer, &server{})

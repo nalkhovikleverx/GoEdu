@@ -1,23 +1,26 @@
 package main
 
 import (
-	"GoEdu/proto/ping"
 	"context"
+	"log"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"log"
+
+	"GoEdu/proto/ping"
 )
 
 func main() {
-	conn, err := grpc.Dial(":8000", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatal(err)
+	conn, errConn := grpc.Dial("127.0.0.1:8000", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if errConn != nil {
+		log.Fatal(errConn)
+	}
+
+	client := ping.NewPingServiceClient(conn)
+	response, errResp := client.Ping(context.Background(), &ping.PingRequest{Message: "Ping"})
+	if errResp != nil {
+		log.Fatal(errResp)
 	}
 	defer conn.Close()
-	client := ping.NewPingServiceClient(conn)
-	response, err := client.Ping(context.Background(), &ping.PingRequest{Message: "Ping"})
-	if err != nil {
-		log.Fatal(err)
-	}
 	log.Println("Response: ", response.Message)
 }

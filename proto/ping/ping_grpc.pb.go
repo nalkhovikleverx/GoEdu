@@ -47,7 +47,7 @@ func (c *pingServiceClient) Ping(ctx context.Context, in *PingRequest, opts ...g
 // for forward compatibility
 type PingServiceServer interface {
 	Ping(context.Context, *PingRequest) (*PingResponse, error)
-	// mustEmbedUnimplementedPingServiceServer()
+	mustEmbedUnimplementedPingServiceServer()
 }
 
 // UnimplementedPingServiceServer must be embedded to have forward compatible implementations.
