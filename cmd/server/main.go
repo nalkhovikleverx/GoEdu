@@ -1,16 +1,11 @@
 package main
 
 import (
+	"GoEdu/proto/ping"
 	"context"
+	"google.golang.org/grpc"
 	"log"
 	"net"
-	"os"
-	"os/signal"
-	"syscall"
-
-	"google.golang.org/grpc"
-
-	"GoEdu/proto/ping"
 )
 
 type server struct {
@@ -23,29 +18,28 @@ func (s *server) Ping(ctx context.Context, p *ping.PingRequest) (*ping.PingRespo
 }
 
 func main() {
-	errChan := make(chan error)
-	stopChan := make(chan os.Signal)
-	signal.Notify(stopChan, syscall.SIGTERM, syscall.SIGINT)
+	err := run()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
+
+func run() error {
 	lis, errLis := net.Listen("tcp", "0.0.0.0:8000")
+	defer lis.Close()
 	if errLis != nil {
-		log.Fatal(errLis)
+		return errLis
 	}
 	grpcServer := grpc.NewServer()
-	ping.RegisterPingServiceServer(grpcServer, &server{})
-
-	go func() {
-		if err := grpcServer.Serve(lis); err != nil {
-			errChan <- err
-		}
-	}()
 	defer func() {
 		grpcServer.GracefulStop()
 	}()
+	ping.RegisterPingServiceServer(grpcServer, &server{})
 
-	select {
-	case err := <-errChan:
-		log.Println("Fatal error:", err)
-	case <-stopChan:
+	if err := grpcServer.Serve(lis); err != nil {
+		return err
 	}
 
+	return nil
 }
