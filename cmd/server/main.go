@@ -27,10 +27,10 @@ func main() {
 
 func run() error {
 	lis, errLis := net.Listen("tcp", "0.0.0.0:8000")
-	defer lis.Close()
 	if errLis != nil {
 		return errLis
 	}
+	defer lis.Close()
 	grpcServer := grpc.NewServer()
 	ping.RegisterPingServiceServer(grpcServer, &server{})
 
