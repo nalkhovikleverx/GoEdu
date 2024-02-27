@@ -9,22 +9,30 @@ import (
 )
 
 type server struct {
+	ping.UnimplementedPingServiceServer
 }
 
 func (s *server) Ping(ctx context.Context, p *ping.PingRequest) (*ping.PingResponse, error) {
-	println("REQUEST MESSAGE:", p.Message)
+	log.Println("REQUEST MESSAGE:", p.Message)
 	return &ping.PingResponse{Message: "Pong"}, nil
 }
 
 func main() {
-	lis, err := net.Listen("tcp", ":8000")
+	err := run()
 	if err != nil {
 		log.Fatal(err)
+	}
+
+}
+
+func run() error {
+	lis, errLis := net.Listen("tcp", "0.0.0.0:8000")
+	defer lis.Close()
+	if errLis != nil {
+		return errLis
 	}
 	grpcServer := grpc.NewServer()
 	ping.RegisterPingServiceServer(grpcServer, &server{})
 
-	if err := grpcServer.Serve(lis); err != nil {
-		log.Fatal(err)
-	}
+	return grpcServer.Serve(lis)
 }
