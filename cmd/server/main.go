@@ -32,14 +32,7 @@ func run() error {
 		return errLis
 	}
 	grpcServer := grpc.NewServer()
-	defer func() {
-		grpcServer.GracefulStop()
-	}()
 	ping.RegisterPingServiceServer(grpcServer, &server{})
 
-	if err := grpcServer.Serve(lis); err != nil {
-		return err
-	}
-
-	return nil
+	return grpcServer.Serve(lis)
 }
