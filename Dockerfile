@@ -13,8 +13,8 @@ FROM scratch
 WORKDIR /app
 
 COPY --from=build-env /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY --from=build-env /app /bin
+COPY --from=build-env /app/bin /app/bin
 
 
 EXPOSE 8000
-ENTRYPOINT ["app/bin/server"]
+ENTRYPOINT ["bin/server"]
