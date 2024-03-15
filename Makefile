@@ -12,3 +12,6 @@ lint:
 	golangci-lint run
 lint-fix:
 	golangci-lint run --fix
+
+markdownlint:
+	markdownlint-cli2 --config ./docs/decisions/.markdownlint.yml docs/decisions/*.md
