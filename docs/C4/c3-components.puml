@@ -1,0 +1,30 @@
+@startuml C3 Components
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define ICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!includeurl ICONS/devicons/go.puml
+
+AddElementTag("golang", $bgColor="#86D4DE", $fontColor="black", $sprite="go")
+
+System_Boundary(c1, "Abstract System") {
+    Boundary(monolith, "Abstract System Monolith Application") {
+        Component(userAccessModule, "User Access", "Go package", $tags="golang")
+        Component(registrationsModule, "User Registrations", "Go package", $tags="golang")
+        ComponentQueue(eventsBus, "Events Bus", "In memory", $tags="golang")
+
+        Boundary(database, "Storage") {
+            ComponentDb(userAccessData, "User Access data", "in-memory", $tags="golang")
+            ComponentDb(registrationsData, "Registrations data", "in-memory", $tags="golang")
+        }
+    }
+}
+
+Rel(userAccessModule, eventsBus, "Publishes event to / subscribes")
+Rel(registrationsModule, eventsBus, "Publishes event to / subscribes")
+
+Rel(userAccessModule, userAccessData, "Store / retrieve")
+Rel(registrationsModule, registrationsData, "Store / retrieve")
+
+LAYOUT_WITH_LEGEND()
+
+@enduml

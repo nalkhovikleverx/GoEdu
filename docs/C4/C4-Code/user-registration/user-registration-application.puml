@@ -1,0 +1,70 @@
+@startuml C4-UserRegistration-Application
+
+package "User Registration Application" << Rectangle >> {
+
+    interface Event {}
+    interface Command {}
+    interface Result {}
+
+    class NoResult implements Result {}
+
+    class CommandResult << Result >> {
+        + Result Result
+        + Event[] Events
+    }
+
+    interface CommandHandler << Command, Result >> {
+        + Handle(Command) CommandResult[Result]
+    }
+
+    interface UserRegistrationRepository {
+        + Add(userRegistration: UserRegistration): void
+        + Load(id: UserRegistrationID): UserRegistration
+        + Update(userRegistration: UserRegistration): void
+    }
+
+    interface UniqueEmailVerifier {
+        + IsUnique(email: UserRegistrationEmail): boolean
+    }
+
+    class UserEmailMustBeUniqueError {}
+
+    interface PasswordHasher {
+        + Hash(password: string): string
+    }
+
+    class RegisterNewUserCommand implements Command {
+        + string FirstName
+        + string LastName
+        + string Email
+        + string Password
+    }
+
+    class RegisterNewUserCommandHandler implements CommandHandler {
+        + Handle(command: RegisterNewUserCommand): CommandResult[NoResult]
+    }
+
+    class ConfirmUserRegistrationCommand implements Command {
+        + UserRegistrationID ID
+    }
+
+    class ConfirmUserRegistrationCommandHandler implements CommandHandler {
+        + Handle(command: ConfirmUserRegistrationCommand): CommandResult[NoResult]
+    }
+
+    class GetWaitingForConfirmationUserRegistationsQuery {}
+
+    interface UserRegistrationReadModel {
+        + GetWaitingForConfirmationUserRegistations(GetWaitingForConfirmationUserRegistationsQuery): UserRegistration[]
+    }
+
+    RegisterNewUserCommandHandler -- UniqueEmailVerifier: uses >
+    UniqueEmailVerifier -- UserEmailMustBeUniqueError : throws >
+    RegisterNewUserCommandHandler -- PasswordHasher: uses >
+    RegisterNewUserCommandHandler -- UserRegistrationRepository: adds UserRegistration >
+
+    ConfirmUserRegistrationCommandHandler -- UserRegistrationRepository: updates UserRegistration >
+
+}
+
+@enduml

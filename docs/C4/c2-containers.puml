@@ -1,0 +1,19 @@
+@startuml C2 Containers
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define ICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
+!includeurl ICONS/devicons/go.puml
+
+AddElementTag("golang", $bgColor="#86D4DE", $fontColor="black", $sprite="go")
+
+Person(abstractUser, "Abstract User", "An abstract user of the system")
+Person(adminPerson, "Administrator", "Administrator of the system")
+
+System_Boundary(c1, "Abstract System") {
+    Container(monolith, "Abstract System Monolith Application", "Go", "Backend", $tags="golang")
+}
+Rel(abstractUser, monolith, "Uses", "not decided yet")
+Rel(adminPerson, monolith, "Uses", "not decided yet")
+
+LAYOUT_WITH_LEGEND()
+
+@enduml

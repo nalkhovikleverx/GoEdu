@@ -1,0 +1,59 @@
+@startuml C4-UserRegistration-Domain
+
+package "User Registration Domain"  << Rectangle >> {
+
+    class UserRegistrationID << VO >> {
+        + UUID Value
+    }
+
+    class UserRegistration << Entity >> {
+        + UserRegistrationID ID
+        + UserRegistrationStatus Status
+        + string Name: FirstName + LastName
+        + string FirstName
+        + string LastName
+        + string Password
+        + UserRegistrationEmail Email
+        + datetime RegistrationDate
+        + datetime? ConfirmationDate
+
+        + static RegisterNewUser(firstName: string, lastName: string, email: string, password: string): UserRegistration
+        + Confirm(): void
+    }
+
+    class UserRegistrationStatus << VO >> {
+        - string Value
+        + UserRegistrationStatus(value: string)
+        + static WaitingForConfirmation: UserRegistrationStatus
+        + static Confirmed: UserRegistrationStatus
+    }
+
+    class UserRegistrationEmail << VO >> {
+        - string value
+        + static Create(email: string): UserRegistrationEmail
+        + String(): string
+    }
+
+    class NewUserRegisteredEvent << Event >> {
+        + UserRegistrationID ID
+        + string FirstName
+        + string LastName
+        + string Email
+        + datetime RegistrationDate
+    }
+
+    class UserRegistrationConfirmed << Event >> {
+        + UserRegistrationID ID
+    }
+
+    class UserRegistrationCannotBeConfirmedMoreThanOnceError << Error >> {}
+
+    UserRegistration *-- UserRegistrationID : of
+    UserRegistration *-- UserRegistrationStatus : of
+    UserRegistration *-- UserRegistrationEmail : of
+    UserRegistration -- UserRegistrationCannotBeConfirmedMoreThanOnceError: throws >
+    UserRegistration -- NewUserRegisteredEvent: creates >
+    UserRegistration -- UserRegistrationConfirmed: creates >
+}
+
+@enduml

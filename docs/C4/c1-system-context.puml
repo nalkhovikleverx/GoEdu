@@ -1,0 +1,13 @@
+@startuml C1 System Context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(abstractUser, "Abstract User", "An abstract user of the system")
+Person(adminPerson, "Administrator", "Administrator of the system")
+
+System(abstractSystem, "Abstract System", "An abstract system")
+
+Rel(abstractUser, abstractSystem, "Use abstract system for abstract purposes")
+Rel(adminPerson, abstractSystem, "Perform administrative actions on abstract system")
+
+LAYOUT_WITH_LEGEND()
+@enduml
