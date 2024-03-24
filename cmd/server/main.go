@@ -1,11 +1,13 @@
 package main
 
 import (
-	"GoEdu/proto/ping"
 	"context"
-	"google.golang.org/grpc"
 	"log"
 	"net"
+
+	"google.golang.org/grpc"
+
+	"GoEdu/proto/ping"
 )
 
 type server struct {
@@ -22,11 +24,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
 
 func run() error {
-	lis, errLis := net.Listen("tcp", "0.0.0.0:8000")
+	lis, errLis := net.Listen("tcp", "127.0.0.1:8000")
 	if errLis != nil {
 		return errLis
 	}
