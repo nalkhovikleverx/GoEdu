@@ -17,7 +17,7 @@ package "User Registration Domain"  << Rectangle >> {
         + datetime RegistrationDate
         + datetime? ConfirmationDate
 
-        + static RegisterNewUser(firstName: string, lastName: string, email: string, password: string): UserRegistration
+        + static RegisterNewUser(firstName: string, lastName: string, email: Email, password: string): UserRegistration
         + Confirm(): void
     }
 

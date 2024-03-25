@@ -15,3 +15,6 @@ lint-fix:
 
 markdownlint:
 	markdownlint-cli2 --config ./docs/decisions/.markdownlint.yml docs/decisions/*.md
+
+plantuml:
+	find ./docs/C4/ -name "*.puml" -type f -exec plantuml {} +
