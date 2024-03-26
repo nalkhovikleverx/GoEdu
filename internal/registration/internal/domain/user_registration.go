@@ -3,6 +3,7 @@ package domain
 import (
 	"fmt"
 	"github.com/google/uuid"
+	"net/mail"
 	"time"
 )
 
@@ -10,24 +11,29 @@ var (
 	UserRegistrationCannotBeConfirmedMoreThanOnceError = fmt.Errorf("UserRegistration can't be confirmed more than once")
 )
 
-func RegisterNewUser(firstName, lastName, email, password string) *UserRegistration {
+func RegisterNewUser(firstName, lastName, email, password string) (*UserRegistration, error) {
+	userMail, err := CreateUserEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
 	return &UserRegistration{
 		ID:               UserRegistrationId{Value: uuid.New()},
-		status:           WaitForConfirmation,
-		email:            *CreateUserEmail(email),
+		Status:           WaitForConfirmation,
+		Email:            *userMail,
 		Name:             firstName + " " + lastName,
 		FirstName:        firstName,
 		LastName:         lastName,
 		Password:         password,
 		RegistrationDate: time.Now(),
 		ConfirmationDate: time.Time{},
-	}
+	}, nil
 }
 
 type UserRegistration struct {
 	ID               UserRegistrationId
-	status           UserRegistrationStatus
-	email            UserRegistrationEmail
+	Status           UserRegistrationStatus
+	Email            UserRegistrationEmail
 	Name             string
 	FirstName        string
 	LastName         string
@@ -36,9 +42,13 @@ type UserRegistration struct {
 	ConfirmationDate time.Time
 }
 
-func (u *UserRegistration) Confirm() {
-	u.status = Confirmed
+func (u *UserRegistration) Confirm() error {
+	if u.Status == Confirmed {
+		return UserRegistrationCannotBeConfirmedMoreThanOnceError
+	}
+	u.Status = Confirmed
 	u.ConfirmationDate = time.Now()
+	return nil
 }
 
 type UserRegistrationEvent struct {
@@ -54,8 +64,12 @@ type UserRegistrationId struct {
 	Value uuid.UUID
 }
 
-func CreateUserEmail(value string) *UserRegistrationEmail {
-	return &UserRegistrationEmail{value: value}
+func CreateUserEmail(value string) (*UserRegistrationEmail, error) {
+	_, err := mail.ParseAddress(value)
+	if err != nil {
+		return nil, err
+	}
+	return &UserRegistrationEmail{value: value}, nil
 }
 
 type UserRegistrationEmail struct {
