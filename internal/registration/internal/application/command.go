@@ -16,5 +16,5 @@ type RegisterNewUserCommand struct {
 }
 
 type ConfirmUserRegistrationCommand struct {
-	ID domain.UserRegistrationId
+	ID domain.UserRegistrationID
 }

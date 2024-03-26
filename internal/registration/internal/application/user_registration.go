@@ -6,5 +6,5 @@ type GetWaitingForConfirmationUserRegistrationsQuery struct {
 }
 
 type UserRegistrationReadModel interface {
-	GetWaitingForConfirmationUserRegistrations(GetWaitingForConfirmationUserRegistrationsQuery) []domain.UserRegistration
+	GetWaitingForConfirmationUserRegistrations(GetWaitingForConfirmationUserRegistrationsQuery) ([]domain.UserRegistration, error)
 }

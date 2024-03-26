@@ -7,7 +7,7 @@ import (
 )
 
 type CommandHandler interface {
-	Handle(context context.Context, command Command) (CommandResult, error)
+	Handle(context.Context, Command) (CommandResult, error)
 }
 
 type RegisterNewUserCommandHandler struct {
@@ -19,23 +19,30 @@ type RegisterNewUserCommandHandler struct {
 func (r *RegisterNewUserCommandHandler) Handle(context context.Context, command Command) (CommandResult, error) {
 	regNewUserCommand := command.(RegisterNewUserCommand)
 
-	user, err := domain.RegisterNewUser(
-		regNewUserCommand.FirstName,
-		regNewUserCommand.LastName,
-		regNewUserCommand.Email,
-		r.hasher.Hash(regNewUserCommand.Password),
-	)
-
+	h, err := r.hasher.Hash(regNewUserCommand.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	if r.verifier.isUnique(user.Email) != true {
-		return nil, UserEmailMustBeUniqueError
+	user, err := domain.RegisterNewUser(
+		regNewUserCommand.FirstName,
+		regNewUserCommand.LastName,
+		regNewUserCommand.Email,
+		h,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if res, err := r.verifier.IsUnique(context, user.Email); err != nil || res != true {
+		if err != nil {
+			return nil, err
+		} else {
+			return nil, UserEmailMustBeUniqueError
+		}
 	}
 
 	err = r.repository.Add(context, *user)
-
 	if err != nil {
 		return nil, err
 	}
@@ -73,15 +80,15 @@ var (
 )
 
 type UniqueEmailVerifier interface {
-	isUnique(email domain.UserRegistrationEmail) bool
+	IsUnique(context.Context, domain.UserRegistrationEmail) (bool, error)
 }
 
 type PasswordHasher interface {
-	Hash(password string) string
+	Hash(string) (string, error)
 }
 
 type UserRegistrationRepository interface {
-	Add(context context.Context, userRegistration domain.UserRegistration) error
-	Load(context context.Context, id domain.UserRegistrationId) (domain.UserRegistration, error)
-	Update(context context.Context, userRegistration domain.UserRegistration) error
+	Add(context.Context, domain.UserRegistration) error
+	Load(context.Context, domain.UserRegistrationID) (domain.UserRegistration, error)
+	Update(context.Context, domain.UserRegistration) error
 }

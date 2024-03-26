@@ -18,9 +18,9 @@ func RegisterNewUser(firstName, lastName, email, password string) (*UserRegistra
 	}
 
 	return &UserRegistration{
-		ID:               UserRegistrationId{Value: uuid.New()},
+		ID:               UserRegistrationID{Value: uuid.New()},
 		Status:           WaitForConfirmation,
-		Email:            *userMail,
+		Email:            userMail,
 		Name:             firstName + " " + lastName,
 		FirstName:        firstName,
 		LastName:         lastName,
@@ -31,7 +31,7 @@ func RegisterNewUser(firstName, lastName, email, password string) (*UserRegistra
 }
 
 type UserRegistration struct {
-	ID               UserRegistrationId
+	ID               UserRegistrationID
 	Status           UserRegistrationStatus
 	Email            UserRegistrationEmail
 	Name             string
@@ -52,7 +52,7 @@ func (u *UserRegistration) Confirm() error {
 }
 
 type UserRegistrationEvent struct {
-	ID               UserRegistrationId
+	ID               UserRegistrationID
 	email            UserRegistrationEmail
 	Name             string
 	FirstName        string
@@ -60,16 +60,16 @@ type UserRegistrationEvent struct {
 	RegistrationDate time.Time
 }
 
-type UserRegistrationId struct {
+type UserRegistrationID struct {
 	Value uuid.UUID
 }
 
-func CreateUserEmail(value string) (*UserRegistrationEmail, error) {
+func CreateUserEmail(value string) (UserRegistrationEmail, error) {
 	_, err := mail.ParseAddress(value)
 	if err != nil {
-		return nil, err
+		return UserRegistrationEmail{}, err
 	}
-	return &UserRegistrationEmail{value: value}, nil
+	return UserRegistrationEmail{value: value}, nil
 }
 
 type UserRegistrationEmail struct {
