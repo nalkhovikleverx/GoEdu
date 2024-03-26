@@ -4,17 +4,10 @@ package "User Registration Application" << Rectangle >> {
 
     interface Event {}
     interface Command {}
-    interface Result {}
+    interface CommandResult {}
 
-    class NoResult implements Result {}
-
-    class CommandResult << Result >> {
-        + Result Result
-        + Event[] Events
-    }
-
-    interface CommandHandler << Command, Result >> {
-        + Handle(Command) CommandResult[Result]
+    interface CommandHandler {
+        + Handle(Command) CommandResult
     }
 
     interface UserRegistrationRepository {
@@ -41,7 +34,7 @@ package "User Registration Application" << Rectangle >> {
     }
 
     class RegisterNewUserCommandHandler implements CommandHandler {
-        + Handle(command: RegisterNewUserCommand): CommandResult[NoResult]
+        + Handle(command: RegisterNewUserCommand): CommandResult
     }
 
     class ConfirmUserRegistrationCommand implements Command {
@@ -49,13 +42,22 @@ package "User Registration Application" << Rectangle >> {
     }
 
     class ConfirmUserRegistrationCommandHandler implements CommandHandler {
-        + Handle(command: ConfirmUserRegistrationCommand): CommandResult[NoResult]
+        + Handle(command: ConfirmUserRegistrationCommand): CommandResult
     }
 
     class GetWaitingForConfirmationUserRegistationsQuery {}
 
+    class UserRegistrationView {
+        + string ID
+        + string FirstName
+        + string LastName
+        + string Email
+        + string Status
+        + datetime RegistrationDate
+    }
+
     interface UserRegistrationReadModel {
-        + GetWaitingForConfirmationUserRegistations(GetWaitingForConfirmationUserRegistationsQuery): UserRegistration[]
+        + GetWaitingForConfirmationUserRegistations(GetWaitingForConfirmationUserRegistationsQuery): UserRegistrationView[]
     }
 
     RegisterNewUserCommandHandler -- UniqueEmailVerifier: uses >
