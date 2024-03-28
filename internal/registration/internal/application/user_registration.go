@@ -1,10 +1,10 @@
 package application
 
-import "GoEdu/internal/registration/internal/domain"
+import "context"
 
 type GetWaitingForConfirmationUserRegistrationsQuery struct {
 }
 
 type UserRegistrationReadModel interface {
-	GetWaitingForConfirmationUserRegistrations(GetWaitingForConfirmationUserRegistrationsQuery) ([]domain.UserRegistration, error)
+	GetWaitingForConfirmationUserRegistrations(context.Context, GetWaitingForConfirmationUserRegistrationsQuery) ([]UserRegistrationView, error)
 }

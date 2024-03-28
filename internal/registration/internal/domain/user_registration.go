@@ -1,14 +1,15 @@
 package domain
 
 import (
-	"fmt"
-	"github.com/google/uuid"
+	"errors"
 	"net/mail"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 var (
-	UserRegistrationCannotBeConfirmedMoreThanOnceError = fmt.Errorf("UserRegistration can't be confirmed more than once")
+	UserRegistrationCannotBeConfirmedMoreThanOnceError = errors.New("user can't be confirmed more than once")
 )
 
 func RegisterNewUser(firstName, lastName, email, password string) (*UserRegistration, error) {
@@ -18,7 +19,7 @@ func RegisterNewUser(firstName, lastName, email, password string) (*UserRegistra
 	}
 
 	return &UserRegistration{
-		ID:               UserRegistrationID{Value: uuid.New()},
+		ID:               NewUserRegistrationID(),
 		Status:           WaitForConfirmation,
 		Email:            userMail,
 		Name:             firstName + " " + lastName,
@@ -60,8 +61,22 @@ type UserRegistrationEvent struct {
 	RegistrationDate time.Time
 }
 
-type UserRegistrationID struct {
-	Value uuid.UUID
+func NewUserRegistrationID() UserRegistrationID {
+	return UserRegistrationID(uuid.New())
+}
+
+type UserRegistrationID uuid.UUID
+
+func ParseUserRegistrationID(urid string) (UserRegistrationID, error) {
+	uid, err := uuid.Parse(urid)
+	if err != nil {
+		return UserRegistrationID{}, err
+	}
+	return UserRegistrationID(uid), nil
+}
+
+func MustParseUserRegistrationID(urid string) UserRegistrationID {
+	return UserRegistrationID(uuid.MustParse(urid))
 }
 
 func CreateUserEmail(value string) (UserRegistrationEmail, error) {
