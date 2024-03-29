@@ -32,15 +32,14 @@ type RegisterNewUserCommandResult struct {
 }
 
 type RegisterNewUserCommandHandler struct {
-	hasher     PasswordHasher
-	verifier   UniqueEmailVerifier
-	repository UserRegistrationRepository
+	Hasher     PasswordHasher
+	Repository UserRegistrationRepository
 }
 
 func (r *RegisterNewUserCommandHandler) Handle(context context.Context, command Command) (CommandResult, error) {
 	regNewUserCommand := command.(RegisterNewUserCommand)
 
-	h, err := r.hasher.Hash(regNewUserCommand.Password)
+	h, err := r.Hasher.Hash(regNewUserCommand.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +54,7 @@ func (r *RegisterNewUserCommandHandler) Handle(context context.Context, command 
 		return nil, err
 	}
 
-	err = r.repository.Add(context, *user)
+	err = r.Repository.Add(context, *user)
 	if err != nil {
 		return nil, err
 	}
@@ -64,12 +63,12 @@ func (r *RegisterNewUserCommandHandler) Handle(context context.Context, command 
 }
 
 type ConfirmUserRegistrationCommandHandler struct {
-	repository UserRegistrationRepository
+	Repository UserRegistrationRepository
 }
 
 func (c *ConfirmUserRegistrationCommandHandler) Handle(context context.Context, command Command) (CommandResult, error) {
 	confUserRegistrationCommand := command.(ConfirmUserRegistrationCommand)
-	user, err := c.repository.Load(context, confUserRegistrationCommand.ID)
+	user, err := c.Repository.Load(context, confUserRegistrationCommand.ID)
 
 	if err != nil {
 		return nil, err
@@ -79,7 +78,7 @@ func (c *ConfirmUserRegistrationCommandHandler) Handle(context context.Context, 
 		return nil, err
 	}
 
-	err = c.repository.Update(context, user)
+	err = c.Repository.Update(context, user)
 
 	if err != nil {
 		return nil, err
