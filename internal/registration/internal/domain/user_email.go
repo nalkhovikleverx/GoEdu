@@ -2,12 +2,14 @@ package domain
 
 import "net/mail"
 
-func CreateUserEmail(value string) (UserRegistrationEmail, error) {
-	_, err := mail.ParseAddress(value)
-	if err != nil {
-		return "", err
-	}
-	return UserRegistrationEmail(value), nil
+type UserRegistrationEmail struct {
+	value string
 }
 
-type UserRegistrationEmail string
+func CreateUserEmail(value string) (*UserRegistrationEmail, error) {
+	_, err := mail.ParseAddress(value)
+	if err != nil {
+		return &UserRegistrationEmail{}, err
+	}
+	return &UserRegistrationEmail{value: value}, nil
+}

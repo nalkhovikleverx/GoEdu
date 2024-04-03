@@ -2,5 +2,4 @@ package application
 
 // Event
 
-type Event interface {
-}
+type Event any

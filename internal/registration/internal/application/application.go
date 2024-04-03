@@ -7,11 +7,9 @@ import (
 	"GoEdu/internal/registration/internal/domain"
 )
 
-type Command interface {
-}
+type Command any
 
-type CommandResult interface {
-}
+type CommandResult any
 
 type CommandHandler interface {
 	Handle(context.Context, Command) (CommandResult, error)
@@ -22,15 +20,15 @@ var (
 )
 
 type UniqueEmailVerifier interface {
-	IsUnique(context.Context, domain.UserRegistrationEmail) error
+	IsUnique(context.Context, *domain.UserRegistrationEmail) error
 }
 
 type PasswordHasher interface {
-	Hash(string) (string, error)
+	Hash(password *domain.UserPassword) (*domain.UserPassword, error)
 }
 
 type UserRegistrationRepository interface {
 	Add(context.Context, *domain.UserRegistration) error
-	Load(context.Context, domain.UserRegistrationID) (domain.UserRegistration, error)
+	Load(context.Context, domain.UserRegistrationID) (*domain.UserRegistration, error)
 	Update(context.Context, *domain.UserRegistration) error
 }

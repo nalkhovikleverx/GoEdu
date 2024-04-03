@@ -2,11 +2,11 @@ package domain
 
 import "github.com/google/uuid"
 
+type UserRegistrationID uuid.UUID
+
 func NewUserRegistrationID() UserRegistrationID {
 	return UserRegistrationID(uuid.New())
 }
-
-type UserRegistrationID uuid.UUID
 
 func ParseUserRegistrationID(urid string) (UserRegistrationID, error) {
 	uid, err := uuid.Parse(urid)

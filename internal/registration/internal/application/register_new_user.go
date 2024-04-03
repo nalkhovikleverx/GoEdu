@@ -7,10 +7,10 @@ import (
 )
 
 type RegisterNewUserCommand struct {
-	FirstName string
-	LastName  string
+	FirstName domain.UserFirstName
+	LastName  domain.UserLastName
 	Email     domain.UserRegistrationEmail
-	Password  string
+	Password  domain.UserPassword
 }
 
 type RegisterNewUserCommandResult struct {
@@ -29,29 +29,29 @@ type RegisterNewUserCommandHandler struct {
 func (r *RegisterNewUserCommandHandler) Handle(context context.Context, command Command) (CommandResult, error) {
 	regNewUserCommand := command.(RegisterNewUserCommand)
 
-	err := r.verifier.IsUnique(context, regNewUserCommand.Email)
+	err := r.verifier.IsUnique(context, &regNewUserCommand.Email)
 	if err != nil {
-		return nil, err
+		return RegisterNewUserCommandResult{}, err
 	}
 
-	h, err := r.hasher.Hash(regNewUserCommand.Password)
+	h, err := r.hasher.Hash(&regNewUserCommand.Password)
 	if err != nil {
-		return nil, err
+		return RegisterNewUserCommandResult{}, err
 	}
 
 	user, err := domain.RegisterNewUser(
 		regNewUserCommand.FirstName,
 		regNewUserCommand.LastName,
-		h,
+		*h,
 		regNewUserCommand.Email,
 	)
 	if err != nil {
-		return nil, err
+		return RegisterNewUserCommandResult{}, err
 	}
 
 	err = r.repository.Add(context, user)
 	if err != nil {
-		return nil, err
+		return RegisterNewUserCommandResult{}, err
 	}
 
 	return RegisterNewUserCommandResult{}, nil
