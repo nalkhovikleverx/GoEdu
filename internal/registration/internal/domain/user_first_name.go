@@ -12,7 +12,7 @@ type UserFirstName struct {
 }
 
 func CreateUserFirstName(value string) (*UserFirstName, error) {
-	if len(strings.TrimSpace(value)) != 0 {
+	if len(strings.TrimSpace(value)) == 0 {
 		return &UserFirstName{}, FirstNameCannotBeEmptyError
 	}
 	return &UserFirstName{value: value}, nil

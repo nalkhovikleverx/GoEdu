@@ -20,13 +20,9 @@ func TestConfirmUserRegistration(t *testing.T) {
 		want       bool
 	}{
 		"happy path": {
-			Repository: &UserRepositorySpy{
-				Added:   nil,
-				Loaded:  &domain.UserRegistration{},
-				Updated: nil,
-			},
-			command: command,
-			want:    true,
+			Repository: NewUserRepositorySpy(nil, &domain.UserRegistration{}, nil),
+			command:    command,
+			want:       true,
 		},
 	}
 	for name, tc := range tests {
