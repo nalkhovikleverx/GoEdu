@@ -13,27 +13,22 @@ type UserRegistration struct {
 	ID               UserRegistrationID
 	Status           UserRegistrationStatus
 	Email            UserRegistrationEmail
-	Name             string
-	FirstName        UserFirstName
-	LastName         UserLastName
-	Password         UserPassword
+	UserName         UserName
+	Password         HashedUserPassword
 	RegistrationDate time.Time
 	ConfirmationDate time.Time
 }
 
 func RegisterNewUser(
-	firstName UserFirstName,
-	lastName UserLastName,
-	password UserPassword,
+	userName UserName,
+	password HashedUserPassword,
 	email UserRegistrationEmail) (*UserRegistration, error) {
 
 	return &UserRegistration{
 		ID:               NewUserRegistrationID(),
 		Status:           WaitForConfirmation,
 		Email:            email,
-		Name:             firstName.GetValue() + " " + lastName.GetValue(),
-		FirstName:        firstName,
-		LastName:         lastName,
+		UserName:         userName,
 		Password:         password,
 		RegistrationDate: time.Now(),
 		ConfirmationDate: time.Time{},

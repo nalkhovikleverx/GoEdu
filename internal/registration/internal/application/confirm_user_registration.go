@@ -18,10 +18,10 @@ func NewConfirmUserRegistrationCommandHandler(repository UserRegistrationReposit
 	return &ConfirmUserRegistrationCommandHandler{repository: repository}
 }
 
-func (c *ConfirmUserRegistrationCommandHandler) Handle(context context.Context, command Command) (CommandResult, error) {
+func (c *ConfirmUserRegistrationCommandHandler) Handle(ctx context.Context, command Command) (CommandResult, error) {
 	confUserRegistrationCommand := command.(ConfirmUserRegistrationCommand)
-	user, err := c.repository.Load(context, confUserRegistrationCommand.ID)
 
+	user, err := c.repository.Load(ctx, confUserRegistrationCommand.ID)
 	if err != nil {
 		return RegisterNewUserCommandResult{}, err
 	}
@@ -30,8 +30,7 @@ func (c *ConfirmUserRegistrationCommandHandler) Handle(context context.Context, 
 		return RegisterNewUserCommandResult{}, err
 	}
 
-	err = c.repository.Update(context, user)
-
+	err = c.repository.Update(ctx, user)
 	if err != nil {
 		return RegisterNewUserCommandResult{}, err
 	}

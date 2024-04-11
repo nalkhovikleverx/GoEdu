@@ -11,13 +11,17 @@ type UserPassword struct {
 	value string
 }
 
-func CreateUserPassword(value string) (*UserPassword, error) {
+func CreateUserPassword(value string) (UserPassword, error) {
 	if len(strings.TrimSpace(value)) == 0 {
-		return &UserPassword{}, PasswordCannotBeEmptyError
+		return UserPassword{}, PasswordCannotBeEmptyError
 	}
-	return &UserPassword{value}, nil
+	return UserPassword{value}, nil
 }
 
-func (u UserPassword) GetValue() string {
-	return u.value
+type HashedUserPassword struct {
+	value string
+}
+
+func CreateHashedUserPassword(password UserPassword) HashedUserPassword {
+	return HashedUserPassword{value: password.value}
 }

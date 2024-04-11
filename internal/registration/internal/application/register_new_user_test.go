@@ -9,42 +9,74 @@ import (
 	"GoEdu/internal/registration/internal/domain"
 )
 
-func TestRegisterNewUser(t *testing.T) {
-	fName, _ := domain.CreateUserFirstName("jon")
-	lName, _ := domain.CreateUserLastName("joster")
-	email, _ := domain.CreateUserEmail("jojo@gmail.com")
-	password, _ := domain.CreateUserPassword("jojo")
-	command := RegisterNewUserCommand{
-		FirstName: *fName,
-		LastName:  *lName,
-		Email:     *email,
-		Password:  *password,
-	}
+var _ UserRegistrationRepository = (*RegisterNewUserRepoMock)(nil)
 
+type RegisterNewUserRepoMock struct {
+	added bool
+}
+
+func (r *RegisterNewUserRepoMock) Add(_ context.Context, _ *domain.UserRegistration) error {
+	r.added = true
+	return nil
+}
+func (r RegisterNewUserRepoMock) Load(_ context.Context, _ domain.UserRegistrationID) (*domain.UserRegistration, error) {
+	return nil, nil
+}
+func (r RegisterNewUserRepoMock) Update(_ context.Context, _ *domain.UserRegistration) error {
+	return nil
+}
+
+var _ UniqueEmailVerifier = (*UniqueEmailVerifierSpy)(nil)
+
+type UniqueEmailVerifierSpy struct {
+	checked bool
+}
+
+func (u *UniqueEmailVerifierSpy) IsUnique(_ context.Context, _ domain.UserRegistrationEmail) error {
+	u.checked = true
+	return nil
+}
+
+var _ PasswordHasher = (*PasswordHasherSpy)(nil)
+
+type PasswordHasherSpy struct {
+	hashed bool
+}
+
+func (p *PasswordHasherSpy) Hash(password domain.UserPassword) (domain.HashedUserPassword, error) {
+	p.hashed = true
+	return domain.CreateHashedUserPassword(password), nil
+}
+
+func TestRegisterNewUserRegistration(t *testing.T) {
 	tests := map[string]struct {
-		Repository *UserRepositorySpy
-		Hasher     *PasswordHasherSpy
 		verifier   *UniqueEmailVerifierSpy
+		hasher     *PasswordHasherSpy
+		repository *RegisterNewUserRepoMock
 		command    RegisterNewUserCommand
-		want       bool
 	}{
 		"happy path": {
-			Repository: NewUserRepositorySpy(nil, nil, nil),
-			Hasher:     &PasswordHasherSpy{nil},
-			verifier:   &UniqueEmailVerifierSpy{nil},
-			command:    command,
-			want:       true,
+			verifier:   &UniqueEmailVerifierSpy{},
+			hasher:     &PasswordHasherSpy{},
+			repository: &RegisterNewUserRepoMock{},
+			command: RegisterNewUserCommand{
+				FirstName: "a",
+				LastName:  "a",
+				Email:     domain.UserRegistrationEmail{},
+				Password:  domain.UserPassword{},
+			},
 		},
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			handler := NewRegisterNewUserCommandHandler(tc.Hasher, tc.Repository, tc.verifier)
-			_, err := handler.Handle(context.Background(), tc.command)
-			require.Nil(t, err, "NewRegisterNewUserCommandHandler ended with errors")
-			require.NotNil(t, tc.Repository.Added, "user not added to repository")
-			require.NotNil(t, tc.Hasher.hashed, "password not hashed")
-			require.NotNil(t, tc.verifier.checked, "email not checked")
+			handler := NewRegisterNewUserCommandHandler(tc.hasher, tc.repository, tc.verifier)
+			require.NotNil(t, handler, "handler is nil")
+			command, err := handler.Handle(context.Background(), tc.command)
+			require.Nil(t, err, "error not nil")
+			require.NotNil(t, command, "result is nil")
+			require.Equal(t, true, tc.verifier.checked, "verifier not checked")
+			require.Equal(t, true, tc.hasher.hashed, "password not hashed")
+			require.Equal(t, true, tc.repository.added, "user registration not added")
 		})
 	}
-
 }

@@ -20,11 +20,11 @@ var (
 )
 
 type UniqueEmailVerifier interface {
-	IsUnique(context.Context, *domain.UserRegistrationEmail) error
+	IsUnique(context.Context, domain.UserRegistrationEmail) error
 }
 
 type PasswordHasher interface {
-	Hash(password *domain.UserPassword) (*domain.UserPassword, error)
+	Hash(password domain.UserPassword) (domain.HashedUserPassword, error)
 }
 
 type UserRegistrationRepository interface {

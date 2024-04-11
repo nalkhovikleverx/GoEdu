@@ -8,6 +8,10 @@ func NewUserRegistrationID() UserRegistrationID {
 	return UserRegistrationID(uuid.New())
 }
 
+func (u UserRegistrationID) String() string {
+	return uuid.UUID(u).String()
+}
+
 func ParseUserRegistrationID(urid string) (UserRegistrationID, error) {
 	uid, err := uuid.Parse(urid)
 	if err != nil {

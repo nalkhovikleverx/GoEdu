@@ -7,8 +7,8 @@ import (
 )
 
 type RegisterNewUserCommand struct {
-	FirstName domain.UserFirstName
-	LastName  domain.UserLastName
+	FirstName string
+	LastName  string
 	Email     domain.UserRegistrationEmail
 	Password  domain.UserPassword
 }
@@ -26,30 +26,34 @@ type RegisterNewUserCommandHandler struct {
 	verifier   UniqueEmailVerifier
 }
 
-func (r *RegisterNewUserCommandHandler) Handle(context context.Context, command Command) (CommandResult, error) {
+func (r *RegisterNewUserCommandHandler) Handle(ctx context.Context, command Command) (CommandResult, error) {
 	regNewUserCommand := command.(RegisterNewUserCommand)
 
-	err := r.verifier.IsUnique(context, &regNewUserCommand.Email)
+	err := r.verifier.IsUnique(ctx, regNewUserCommand.Email)
 	if err != nil {
 		return RegisterNewUserCommandResult{}, err
 	}
 
-	h, err := r.hasher.Hash(&regNewUserCommand.Password)
+	h, err := r.hasher.Hash(regNewUserCommand.Password)
+	if err != nil {
+		return RegisterNewUserCommandResult{}, err
+	}
+
+	userName, err := domain.CreateUserName(regNewUserCommand.FirstName, regNewUserCommand.LastName)
 	if err != nil {
 		return RegisterNewUserCommandResult{}, err
 	}
 
 	user, err := domain.RegisterNewUser(
-		regNewUserCommand.FirstName,
-		regNewUserCommand.LastName,
-		*h,
+		userName,
+		h,
 		regNewUserCommand.Email,
 	)
 	if err != nil {
 		return RegisterNewUserCommandResult{}, err
 	}
 
-	err = r.repository.Add(context, user)
+	err = r.repository.Add(ctx, user)
 	if err != nil {
 		return RegisterNewUserCommandResult{}, err
 	}
