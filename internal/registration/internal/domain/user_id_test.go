@@ -22,7 +22,7 @@ func TestUserID(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			urid := domain.MustParseUserRegistrationID(tc.id)
 			require.NotEmpty(t, urid)
-			require.Equal(t, tc.id, strings.Replace(urid.String(), "-", "", -1))
+			require.Equal(t, tc.id, strings.ReplaceAll(urid.String(), "-", ""))
 		})
 	}
 }

@@ -4,7 +4,7 @@ import "time"
 
 type UserRegistrationEvent struct {
 	ID               UserRegistrationID
-	email            UserRegistrationEmail
+	Email            UserRegistrationEmail
 	Name             string
 	FirstName        string
 	LastName         string
