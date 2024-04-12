@@ -1,10 +1,12 @@
-package domain
+package domain_test
 
 import (
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
+	"GoEdu/internal/registration/internal/domain"
 )
 
 func TestUserID(t *testing.T) {
@@ -18,7 +20,7 @@ func TestUserID(t *testing.T) {
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			urid := MustParseUserRegistrationID(tc.id)
+			urid := domain.MustParseUserRegistrationID(tc.id)
 			require.NotEmpty(t, urid)
 			require.Equal(t, tc.id, strings.Replace(urid.String(), "-", "", -1))
 		})

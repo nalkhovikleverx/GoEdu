@@ -13,3 +13,7 @@ func CreateUserEmail(value string) (*UserRegistrationEmail, error) {
 	}
 	return &UserRegistrationEmail{value: value}, nil
 }
+
+func (u UserRegistrationEmail) String() string {
+	return u.value
+}

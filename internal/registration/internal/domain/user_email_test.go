@@ -1,9 +1,11 @@
-package domain
+package domain_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
+	"GoEdu/internal/registration/internal/domain"
 )
 
 func TestEmail(t *testing.T) {
@@ -17,10 +19,10 @@ func TestEmail(t *testing.T) {
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			email, err := CreateUserEmail(tc.email)
+			email, err := domain.CreateUserEmail(tc.email)
 			require.Nil(t, err)
 			require.NotNil(t, email)
-			require.Equal(t, tc.email, email.value)
+			require.Equal(t, tc.email, email.String())
 		})
 	}
 }

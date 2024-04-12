@@ -1,4 +1,4 @@
-package application
+package application_test
 
 import (
 	"context"
@@ -6,10 +6,11 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"GoEdu/internal/registration/internal/application"
 	"GoEdu/internal/registration/internal/domain"
 )
 
-var _ UserRegistrationRepository = (*ConfirmUserRegistrationRepoMock)(nil)
+var _ application.UserRegistrationRepository = (*ConfirmUserRegistrationRepoMock)(nil)
 
 type ConfirmUserRegistrationRepoMock struct {
 	loaded  bool
@@ -29,13 +30,13 @@ func (c *ConfirmUserRegistrationRepoMock) Update(_ context.Context, _ *domain.Us
 }
 
 func TestConfirmUserRegistration(t *testing.T) {
-	command := ConfirmUserRegistrationCommand{
+	command := application.ConfirmUserRegistrationCommand{
 		ID: domain.NewUserRegistrationID(),
 	}
 
 	tests := map[string]struct {
 		repository *ConfirmUserRegistrationRepoMock
-		command    ConfirmUserRegistrationCommand
+		command    application.ConfirmUserRegistrationCommand
 	}{
 		"happy path": {
 			repository: &ConfirmUserRegistrationRepoMock{},
@@ -44,7 +45,7 @@ func TestConfirmUserRegistration(t *testing.T) {
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			handler := NewConfirmUserRegistrationCommandHandler(tc.repository)
+			handler := application.NewConfirmUserRegistrationCommandHandler(tc.repository)
 			_, err := handler.Handle(context.Background(), tc.command)
 			require.Nil(t, err, "NewRegisterNewUserCommandHandler ended with errors")
 			require.Equal(t, true, tc.repository.loaded, "user not loaded")

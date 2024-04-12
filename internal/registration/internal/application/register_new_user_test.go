@@ -1,4 +1,4 @@
-package application
+package application_test
 
 import (
 	"context"
@@ -6,10 +6,11 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"GoEdu/internal/registration/internal/application"
 	"GoEdu/internal/registration/internal/domain"
 )
 
-var _ UserRegistrationRepository = (*RegisterNewUserRepoMock)(nil)
+var _ application.UserRegistrationRepository = (*RegisterNewUserRepoMock)(nil)
 
 type RegisterNewUserRepoMock struct {
 	added bool
@@ -26,7 +27,7 @@ func (r RegisterNewUserRepoMock) Update(_ context.Context, _ *domain.UserRegistr
 	return nil
 }
 
-var _ UniqueEmailVerifier = (*UniqueEmailVerifierSpy)(nil)
+var _ application.UniqueEmailVerifier = (*UniqueEmailVerifierSpy)(nil)
 
 type UniqueEmailVerifierSpy struct {
 	checked bool
@@ -37,7 +38,7 @@ func (u *UniqueEmailVerifierSpy) IsUnique(_ context.Context, _ domain.UserRegist
 	return nil
 }
 
-var _ PasswordHasher = (*PasswordHasherSpy)(nil)
+var _ application.PasswordHasher = (*PasswordHasherSpy)(nil)
 
 type PasswordHasherSpy struct {
 	hashed bool
@@ -53,13 +54,13 @@ func TestRegisterNewUserRegistration(t *testing.T) {
 		verifier   *UniqueEmailVerifierSpy
 		hasher     *PasswordHasherSpy
 		repository *RegisterNewUserRepoMock
-		command    RegisterNewUserCommand
+		command    application.RegisterNewUserCommand
 	}{
 		"happy path": {
 			verifier:   &UniqueEmailVerifierSpy{},
 			hasher:     &PasswordHasherSpy{},
 			repository: &RegisterNewUserRepoMock{},
-			command: RegisterNewUserCommand{
+			command: application.RegisterNewUserCommand{
 				FirstName: "a",
 				LastName:  "a",
 				Email:     domain.UserRegistrationEmail{},
@@ -69,7 +70,7 @@ func TestRegisterNewUserRegistration(t *testing.T) {
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			handler := NewRegisterNewUserCommandHandler(tc.hasher, tc.repository, tc.verifier)
+			handler := application.NewRegisterNewUserCommandHandler(tc.hasher, tc.repository, tc.verifier)
 			require.NotNil(t, handler, "handler is nil")
 			command, err := handler.Handle(context.Background(), tc.command)
 			require.Nil(t, err, "error not nil")

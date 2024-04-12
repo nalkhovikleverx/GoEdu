@@ -1,9 +1,11 @@
-package domain
+package domain_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
+	"GoEdu/internal/registration/internal/domain"
 )
 
 func TestUserPassword(t *testing.T) {
@@ -17,10 +19,10 @@ func TestUserPassword(t *testing.T) {
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			password, err := CreateUserPassword(tc.password)
+			password, err := domain.CreateUserPassword(tc.password)
 			require.Nil(t, err)
 			require.NotNil(t, password)
-			require.Equal(t, tc.password, password.value)
+			require.Equal(t, tc.password, password.String())
 		})
 	}
 

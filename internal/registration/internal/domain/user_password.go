@@ -18,10 +18,18 @@ func CreateUserPassword(value string) (UserPassword, error) {
 	return UserPassword{value}, nil
 }
 
+func (u UserPassword) String() string {
+	return u.value
+}
+
 type HashedUserPassword struct {
 	value string
 }
 
 func CreateHashedUserPassword(password UserPassword) HashedUserPassword {
-	return HashedUserPassword{value: password.value}
+	return HashedUserPassword{value: password.String()}
+}
+
+func (h HashedUserPassword) String() string {
+	return h.value
 }
