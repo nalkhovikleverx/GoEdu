@@ -34,5 +34,4 @@ func TestUserRegistration(t *testing.T) {
 			require.Equal(t, tc.email, ur.Email)
 		})
 	}
-
 }

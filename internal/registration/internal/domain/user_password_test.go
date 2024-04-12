@@ -25,5 +25,4 @@ func TestUserPassword(t *testing.T) {
 			require.Equal(t, tc.password, password.String())
 		})
 	}
-
 }
