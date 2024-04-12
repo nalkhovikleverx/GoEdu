@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	UserRegistrationCannotBeConfirmedMoreThanOnceError = errors.New("user can't be confirmed more than once")
+	ErrUserRegistrationCannotBeConfirmedMoreThanOnce = errors.New("user can't be confirmed more than once")
 )
 
 type UserRegistration struct {
@@ -23,7 +23,6 @@ func RegisterNewUser(
 	userName UserName,
 	password HashedUserPassword,
 	email UserRegistrationEmail) (*UserRegistration, error) {
-
 	return &UserRegistration{
 		ID:               NewUserRegistrationID(),
 		Status:           WaitForConfirmation,
@@ -37,7 +36,7 @@ func RegisterNewUser(
 
 func (u *UserRegistration) Confirm() error {
 	if u.Status == Confirmed {
-		return UserRegistrationCannotBeConfirmedMoreThanOnceError
+		return ErrUserRegistrationCannotBeConfirmedMoreThanOnce
 	}
 	u.Status = Confirmed
 	u.ConfirmationDate = time.Now()

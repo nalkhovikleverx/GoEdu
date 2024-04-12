@@ -18,5 +18,7 @@ type GetWaitingForConfirmationUserRegistrationsQuery struct {
 }
 
 type UserRegistrationReadModel interface {
-	GetWaitingForConfirmationUserRegistrations(context.Context, GetWaitingForConfirmationUserRegistrationsQuery) ([]UserRegistrationView, error)
+	GetWaitingForConfirmationUserRegistrations(
+		context.Context,
+		GetWaitingForConfirmationUserRegistrationsQuery) ([]UserRegistrationView, error)
 }

@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var PasswordCannotBeEmptyError = errors.New("password is empty")
+var ErrPasswordCannotBeEmpty = errors.New("password is empty")
 
 type UserPassword struct {
 	value string
@@ -13,7 +13,7 @@ type UserPassword struct {
 
 func CreateUserPassword(value string) (UserPassword, error) {
 	if len(strings.TrimSpace(value)) == 0 {
-		return UserPassword{}, PasswordCannotBeEmptyError
+		return UserPassword{}, ErrPasswordCannotBeEmpty
 	}
 	return UserPassword{value}, nil
 }

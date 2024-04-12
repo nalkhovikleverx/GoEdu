@@ -16,7 +16,10 @@ type RegisterNewUserCommand struct {
 type RegisterNewUserCommandResult struct {
 }
 
-func NewRegisterNewUserCommandHandler(hasher PasswordHasher, repository UserRegistrationRepository, verifier UniqueEmailVerifier) *RegisterNewUserCommandHandler {
+func NewRegisterNewUserCommandHandler(
+	hasher PasswordHasher,
+	repository UserRegistrationRepository,
+	verifier UniqueEmailVerifier) *RegisterNewUserCommandHandler {
 	return &RegisterNewUserCommandHandler{hasher: hasher, repository: repository, verifier: verifier}
 }
 

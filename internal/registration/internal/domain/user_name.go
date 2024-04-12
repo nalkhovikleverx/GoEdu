@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-var FirstNameCannotBeEmptyError = errors.New("first name is empty")
-var LastNameCannotBeEmptyError = errors.New("last name is empty")
+var ErrFirstNameCannotBeEmpty = errors.New("first name is empty")
+var ErrLastNameCannotBeEmpty = errors.New("last name is empty")
 
 type UserName struct {
 	firstName string
@@ -15,10 +15,10 @@ type UserName struct {
 
 func CreateUserName(firstName, lastName string) (UserName, error) {
 	if len(strings.TrimSpace(firstName)) == 0 {
-		return UserName{}, FirstNameCannotBeEmptyError
+		return UserName{}, ErrFirstNameCannotBeEmpty
 	}
 	if len(strings.TrimSpace(lastName)) == 0 {
-		return UserName{}, LastNameCannotBeEmptyError
+		return UserName{}, ErrLastNameCannotBeEmpty
 	}
 
 	return UserName{firstName: firstName, lastName: lastName}, nil

@@ -16,7 +16,7 @@ type CommandHandler interface {
 }
 
 var (
-	UserEmailMustBeUniqueError = errors.New("user email must be unique")
+	ErrUserEmailMustBeUnique = errors.New("user email must be unique")
 )
 
 type UniqueEmailVerifier interface {

@@ -1,11 +1,13 @@
 package main
 
 import (
-	"GoEdu/proto/ping"
 	"context"
-	"google.golang.org/grpc"
 	"log"
 	"net"
+
+	"google.golang.org/grpc"
+
+	"GoEdu/proto/ping"
 )
 
 type server struct {
@@ -22,7 +24,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
 
 func run() error {

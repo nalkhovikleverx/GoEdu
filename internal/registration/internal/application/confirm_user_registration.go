@@ -14,7 +14,8 @@ type ConfirmUserRegistrationCommandHandler struct {
 	repository UserRegistrationRepository
 }
 
-func NewConfirmUserRegistrationCommandHandler(repository UserRegistrationRepository) *ConfirmUserRegistrationCommandHandler {
+func NewConfirmUserRegistrationCommandHandler(
+	repository UserRegistrationRepository) *ConfirmUserRegistrationCommandHandler {
 	return &ConfirmUserRegistrationCommandHandler{repository: repository}
 }
 
