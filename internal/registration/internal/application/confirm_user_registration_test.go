@@ -20,7 +20,9 @@ type ConfirmUserRegistrationRepoMock struct {
 func (c ConfirmUserRegistrationRepoMock) Add(_ context.Context, _ *domain.UserRegistration) error {
 	return nil
 }
-func (c *ConfirmUserRegistrationRepoMock) Load(_ context.Context, _ domain.UserRegistrationID) (*domain.UserRegistration, error) {
+func (c *ConfirmUserRegistrationRepoMock) Load(
+	_ context.Context,
+	_ domain.UserRegistrationID) (*domain.UserRegistration, error) {
 	c.loaded = true
 	return &domain.UserRegistration{}, nil
 }

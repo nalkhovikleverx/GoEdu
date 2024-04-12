@@ -27,7 +27,7 @@ func main() {
 }
 
 func run() error {
-	lis, errLis := net.Listen("tcp", "0.0.0.0:8000")
+	lis, errLis := net.Listen("tcp", "127.0.0.1:8000")
 	if errLis != nil {
 		return errLis
 	}

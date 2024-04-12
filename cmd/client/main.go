@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	conn, errConn := grpc.Dial("0.0.0.0:8000", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, errConn := grpc.Dial("127.0.0.1:8000", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if errConn != nil {
 		log.Fatal(errConn)
 	}

@@ -20,8 +20,10 @@ func (r *RegisterNewUserRepoMock) Add(_ context.Context, _ *domain.UserRegistrat
 	r.added = true
 	return nil
 }
-func (r RegisterNewUserRepoMock) Load(_ context.Context, _ domain.UserRegistrationID) (*domain.UserRegistration, error) {
-	return nil, nil
+func (r RegisterNewUserRepoMock) Load(
+	_ context.Context,
+	_ domain.UserRegistrationID) (*domain.UserRegistration, error) {
+	return &domain.UserRegistration{}, nil
 }
 func (r RegisterNewUserRepoMock) Update(_ context.Context, _ *domain.UserRegistration) error {
 	return nil
