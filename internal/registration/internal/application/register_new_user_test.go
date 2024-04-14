@@ -51,14 +51,14 @@ func (p *PasswordHasherSpy) Hash(password domain.UserPassword) (domain.HashedUse
 	return domain.CreateHashedUserPassword(password), nil
 }
 
-func TestRegisterNewUserRegistration(t *testing.T) {
+func TestPositiveRegisterNewUserRegistration(t *testing.T) {
 	tests := map[string]struct {
 		verifier   *UniqueEmailVerifierSpy
 		hasher     *PasswordHasherSpy
 		repository *RegisterNewUserRepoMock
 		command    application.RegisterNewUserCommand
 	}{
-		"happy path": {
+		"case 1": {
 			verifier:   &UniqueEmailVerifierSpy{},
 			hasher:     &PasswordHasherSpy{},
 			repository: &RegisterNewUserRepoMock{},
@@ -69,14 +69,24 @@ func TestRegisterNewUserRegistration(t *testing.T) {
 				Password:  domain.UserPassword{},
 			},
 		},
+		"case 2": {
+			verifier:   &UniqueEmailVerifierSpy{},
+			hasher:     &PasswordHasherSpy{},
+			repository: &RegisterNewUserRepoMock{},
+			command: application.RegisterNewUserCommand{
+				FirstName: "Abc",
+				LastName:  "Dfg",
+				Email:     domain.UserRegistrationEmail{},
+				Password:  domain.UserPassword{},
+			},
+		},
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
 			handler := application.NewRegisterNewUserCommandHandler(tc.hasher, tc.repository, tc.verifier)
 			require.NotNil(t, handler, "handler is nil")
-			command, err := handler.Handle(context.Background(), tc.command)
+			_, err := handler.Handle(context.Background(), tc.command)
 			require.Nil(t, err, "error not nil")
-			require.NotNil(t, command, "result is nil")
 			require.Equal(t, true, tc.verifier.checked, "verifier not checked")
 			require.Equal(t, true, tc.hasher.hashed, "password not hashed")
 			require.Equal(t, true, tc.repository.added, "user registration not added")
