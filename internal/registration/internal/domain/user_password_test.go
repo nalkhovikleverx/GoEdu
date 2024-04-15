@@ -55,7 +55,7 @@ func TestPositiveHashedUserPassword(t *testing.T) {
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
 			password := domain.NewHashedUserPassword(tc.password)
-			require.Equal(t, tc.password, password.String())
+			require.Equal(t, tc.password.String(), password.String())
 		})
 	}
 }
