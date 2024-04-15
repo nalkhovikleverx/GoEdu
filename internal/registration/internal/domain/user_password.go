@@ -34,8 +34,8 @@ type HashedUserPassword struct {
 	value string
 }
 
-// For educational proposes we use different types between UserPassword
-// input VO and HashedPassword to explicitly mark that password for domain model is encrypted.
+// For educational purposes we use different types between UserPassword input VO and
+// HashedPassword to explicitly mark that password for domain model is encrypted.
 func NewHashedUserPassword(password UserPassword) HashedUserPassword {
 	return HashedUserPassword{value: password.String()}
 }
