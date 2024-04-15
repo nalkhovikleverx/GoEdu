@@ -13,7 +13,7 @@ type UserName struct {
 	lastName  string
 }
 
-func CreateUserName(firstName, lastName string) (UserName, error) {
+func NewUserName(firstName, lastName string) (UserName, error) {
 	if len(strings.TrimSpace(firstName)) == 0 {
 		return UserName{}, ErrFirstNameCannotBeEmpty
 	}
@@ -22,6 +22,14 @@ func CreateUserName(firstName, lastName string) (UserName, error) {
 	}
 
 	return UserName{firstName: firstName, lastName: lastName}, nil
+}
+
+func MustNewUserName(firstName, lastName string) UserName {
+	userName, err := NewUserName(firstName, lastName)
+	if err != nil {
+		panic(err)
+	}
+	return userName
 }
 
 func (u UserName) GetFirstName() string {

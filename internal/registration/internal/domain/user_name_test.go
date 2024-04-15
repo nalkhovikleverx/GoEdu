@@ -13,11 +13,7 @@ func TestPositiveUserName(t *testing.T) {
 		firstName string
 		lastName  string
 	}{
-		"case 1": {
-			firstName: "A",
-			lastName:  "B",
-		},
-		"case 2": {
+		"correct name example": {
 			"jotaro",
 			"joske",
 		},
@@ -25,7 +21,7 @@ func TestPositiveUserName(t *testing.T) {
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			uName, err := domain.CreateUserName(tc.firstName, tc.lastName)
+			uName, err := domain.NewUserName(tc.firstName, tc.lastName)
 			require.Nil(t, err)
 			require.Equal(t, tc.firstName, uName.GetFirstName())
 			require.Equal(t, tc.lastName, uName.GetLastName())
@@ -39,24 +35,65 @@ func TestNegativeUserName(t *testing.T) {
 		firstName string
 		lastName  string
 	}{
-		"case 1": {
+		"incorrect first name example": {
 			firstName: "",
 			lastName:  "B",
 		},
-		"case 2": {
+		"incorrect last name example": {
 			firstName: "A",
 			lastName:  "",
 		},
-		"case 3": {
-			firstName: "",
-			lastName:  "",
+		"incorrect first and last name example": {
+			firstName: " ",
+			lastName:  " ",
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			_, err := domain.CreateUserName(tc.firstName, tc.lastName)
+			_, err := domain.NewUserName(tc.firstName, tc.lastName)
 			require.NotNil(t, err)
+		})
+	}
+}
+
+func TestPositiveMustUserName(t *testing.T) {
+	tests := map[string]struct {
+		firstName string
+		lastName  string
+	}{
+		"correct name example": {
+			"jotaro",
+			"joske",
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			uName := domain.MustNewUserName(tc.firstName, tc.lastName)
+			require.Equal(t, tc.firstName, uName.GetFirstName())
+			require.Equal(t, tc.lastName, uName.GetLastName())
+			require.Equal(t, tc.firstName+" "+tc.lastName, uName.GetFullName())
+		})
+	}
+}
+
+func TestNegativeMustUserName(t *testing.T) {
+	tests := map[string]struct {
+		firstName string
+		lastName  string
+	}{
+		"incorrect first and last name example": {
+			firstName: " ",
+			lastName:  " ",
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			require.Panics(t, func() {
+				domain.MustNewUserName(tc.firstName, tc.lastName)
+			})
 		})
 	}
 }

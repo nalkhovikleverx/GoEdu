@@ -9,19 +9,15 @@ import (
 )
 
 func TestUserRegistration(t *testing.T) {
-	user, _ := domain.CreateUserName("A", "A")
-	p, _ := domain.CreateUserPassword("aaaa")
-	hp := domain.CreateHashedUserPassword(p)
-	email, _ := domain.CreateUserEmail("aaa@gmail.com")
 	tests := map[string]struct {
 		userName domain.UserName
 		password domain.HashedUserPassword
 		email    domain.UserRegistrationEmail
 	}{
-		"case 1": {
-			userName: user,
-			password: hp,
-			email:    *email,
+		"successful creation userRegistration": {
+			userName: domain.MustNewUserName("A", "A"),
+			password: domain.NewHashedUserPassword(domain.MustNewUserPassword("aaaa")),
+			email:    domain.MustNewUserEmail("aaa@gmail.com"),
 		},
 	}
 

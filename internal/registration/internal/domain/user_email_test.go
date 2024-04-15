@@ -8,49 +8,75 @@ import (
 	"GoEdu/internal/registration/internal/domain"
 )
 
-func TestPositiveCreateUserEmail(t *testing.T) {
+func TestPositiveNewUserEmail(t *testing.T) {
 	tests := map[string]struct {
 		email string
 	}{
-		"case 1": {
+		"successful create new email": {
 			email: "email@gmail.com",
-		},
-		"case 2": {
-			email: "ss@ss.com",
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			email, err := domain.CreateUserEmail(tc.email)
+			email, err := domain.NewUserEmail(tc.email)
 			require.Nil(t, err)
 			require.Equal(t, tc.email, email.String())
 		})
 	}
 }
 
-func TestNegativeCreateUserEmail(t *testing.T) {
+func TestNegativeNewUserEmail(t *testing.T) {
 	tests := map[string]struct {
 		email string
 	}{
-		"case 1": {
+		"unsuccessful create new email with empty string": {
 			email: "",
 		},
-		"case 2": {
+		"unsuccessful create new email in incorrect way": {
 			email: "@.com",
-		},
-		"case 3": {
-			email: "aa.com",
-		},
-		"case 4": {
-			email: "a @ a.com",
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			_, err := domain.CreateUserEmail(tc.email)
+			_, err := domain.NewUserEmail(tc.email)
 			require.NotNil(t, err)
+		})
+	}
+}
+
+func TestPositiveMustNewUserEmail(t *testing.T) {
+	tests := map[string]struct {
+		email string
+	}{
+		"successful create new email": {
+			email: "email@gmail.com",
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			email := domain.MustNewUserEmail(tc.email)
+			require.Equal(t, tc.email, email.String())
+		})
+	}
+}
+
+func TestNegativeMustNewUserEmail(t *testing.T) {
+	tests := map[string]struct {
+		email string
+	}{
+		"unsuccessful create new email in incorrect way": {
+			email: "@.com",
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			require.Panics(t, func() {
+				domain.MustNewUserEmail(tc.email)
+			})
 		})
 	}
 }

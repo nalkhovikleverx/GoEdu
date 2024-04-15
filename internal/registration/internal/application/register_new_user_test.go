@@ -48,7 +48,7 @@ type PasswordHasherSpy struct {
 
 func (p *PasswordHasherSpy) Hash(password domain.UserPassword) (domain.HashedUserPassword, error) {
 	p.hashed = true
-	return domain.CreateHashedUserPassword(password), nil
+	return domain.NewHashedUserPassword(password), nil
 }
 
 func TestPositiveRegisterNewUserRegistration(t *testing.T) {
@@ -58,26 +58,15 @@ func TestPositiveRegisterNewUserRegistration(t *testing.T) {
 		repository *RegisterNewUserRepoMock
 		command    application.RegisterNewUserCommand
 	}{
-		"case 1": {
+		"successful register user registration": {
 			verifier:   &UniqueEmailVerifierSpy{},
 			hasher:     &PasswordHasherSpy{},
 			repository: &RegisterNewUserRepoMock{},
 			command: application.RegisterNewUserCommand{
 				FirstName: "a",
 				LastName:  "a",
-				Email:     domain.UserRegistrationEmail{},
-				Password:  domain.UserPassword{},
-			},
-		},
-		"case 2": {
-			verifier:   &UniqueEmailVerifierSpy{},
-			hasher:     &PasswordHasherSpy{},
-			repository: &RegisterNewUserRepoMock{},
-			command: application.RegisterNewUserCommand{
-				FirstName: "Abc",
-				LastName:  "Dfg",
-				Email:     domain.UserRegistrationEmail{},
-				Password:  domain.UserPassword{},
+				Email:     domain.MustNewUserEmail("email@mail.ru"),
+				Password:  domain.MustNewUserPassword("password"),
 			},
 		},
 	}

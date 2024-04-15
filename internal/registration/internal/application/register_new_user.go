@@ -42,7 +42,7 @@ func (r *RegisterNewUserCommandHandler) Handle(ctx context.Context, command Comm
 		return RegisterNewUserCommandResult{}, err
 	}
 
-	userName, err := domain.CreateUserName(regNewUserCommand.FirstName, regNewUserCommand.LastName)
+	userName, err := domain.NewUserName(regNewUserCommand.FirstName, regNewUserCommand.LastName)
 	if err != nil {
 		return RegisterNewUserCommandResult{}, err
 	}

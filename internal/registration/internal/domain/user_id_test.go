@@ -13,10 +13,10 @@ func TestPositiveMustParseUserRegistrationID(t *testing.T) {
 	tests := map[string]struct {
 		id string
 	}{
-		"case 1": {
+		"successful parse urid from decimal": {
 			id: "12345678123456781234567812345678",
 		},
-		"case 2": {
+		"successful parse urid from hex": {
 			id: "12af567812fa567812af567812bc5678",
 		},
 	}
@@ -30,17 +30,57 @@ func TestPositiveMustParseUserRegistrationID(t *testing.T) {
 	}
 }
 
+func TestNegativeMustParseUserRegistrationID(t *testing.T) {
+	tests := map[string]struct {
+		id string
+	}{
+		"unsuccessful parse urid from hex": {
+			id: "12af567812fa567812af567812rc5678",
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			require.Panics(t, func() {
+				domain.MustParseUserRegistrationID(tc.id)
+			})
+		})
+	}
+}
+
+func TestPositiveParseUserRegistrationID(t *testing.T) {
+	tests := map[string]struct {
+		id string
+	}{
+		"successful parse urid from decimal": {
+			id: "12345678123456781234567812345678",
+		},
+		"successful parse urid from hex": {
+			id: "12af567812fa567812af567812bc5678",
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			urid, err := domain.ParseUserRegistrationID(tc.id)
+			require.NotEmpty(t, urid)
+			require.Nil(t, err)
+			require.Equal(t, tc.id, strings.ReplaceAll(urid.String(), "-", ""))
+		})
+	}
+}
+
 func TestNegativeParseUserRegistrationID(t *testing.T) {
 	tests := map[string]struct {
 		id string
 	}{
-		"case 1": {
+		"unsuccessful empty string": {
 			id: "",
 		},
-		"case 2": {
+		"unsuccessful wrong length": {
 			id: "11111",
 		},
-		"case 3": {
+		"unsuccessful wrong characters": {
 			id: "11dffrt",
 		},
 	}

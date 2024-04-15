@@ -11,11 +11,19 @@ type UserPassword struct {
 	value string
 }
 
-func CreateUserPassword(value string) (UserPassword, error) {
+func NewUserPassword(value string) (UserPassword, error) {
 	if len(strings.TrimSpace(value)) == 0 {
 		return UserPassword{}, ErrPasswordCannotBeEmpty
 	}
 	return UserPassword{value}, nil
+}
+
+func MustNewUserPassword(value string) UserPassword {
+	password, err := NewUserPassword(value)
+	if err != nil {
+		panic(err)
+	}
+	return password
 }
 
 func (u UserPassword) String() string {
@@ -26,7 +34,9 @@ type HashedUserPassword struct {
 	value string
 }
 
-func CreateHashedUserPassword(password UserPassword) HashedUserPassword {
+// For educational proposes we use different types between UserPassword
+// input VO and HashedPassword to explicitly mark that password for domain model is encrypted.
+func NewHashedUserPassword(password UserPassword) HashedUserPassword {
 	return HashedUserPassword{value: password.String()}
 }
 

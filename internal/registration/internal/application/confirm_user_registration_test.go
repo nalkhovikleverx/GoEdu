@@ -40,7 +40,7 @@ func TestConfirmUserRegistration(t *testing.T) {
 		repository *ConfirmUserRegistrationRepoMock
 		command    application.ConfirmUserRegistrationCommand
 	}{
-		"happy path": {
+		"successful confirm user registration": {
 			repository: &ConfirmUserRegistrationRepoMock{},
 			command:    command,
 		},
