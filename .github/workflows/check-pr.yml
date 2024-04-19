@@ -52,6 +52,18 @@ jobs:
 
           # Optional: The mode to install golangci-lint. It can be 'binary' or 'goinstall'.
           # install-mode: "goinstall"
+  arch-check:
+    name: arch-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '^1.18'
+      - name: Install go-cleanarch
+        run: go install github.com/roblaszczak/go-cleanarch@latest
+      - name: Clean Architecture checker for Golang
+        run: go-cleanarch
   test:
     name: test
     runs-on: ubuntu-latest
