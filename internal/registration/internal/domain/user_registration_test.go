@@ -23,11 +23,14 @@ func TestUserRegistration(t *testing.T) {
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			ur, err := domain.RegisterNewUser(tc.userName, tc.password, tc.email)
+			sh, err := domain.NewUserRegistrationSnapshot(tc.userName, tc.password, tc.email)
 			require.Nil(t, err)
-			require.Equal(t, tc.password, ur.Password)
-			require.Equal(t, tc.userName, ur.UserName)
-			require.Equal(t, tc.email, ur.Email)
+			require.Equal(t, tc.password, sh.Password)
+			require.Equal(t, tc.userName.GetFullName(), sh.UserName.GetFullName())
+			require.Equal(t, tc.email, sh.Email)
+			require.NotPanics(t, func() {
+				domain.MustCreateUserRegistrationFromSnapshot(*sh)
+			})
 		})
 	}
 }

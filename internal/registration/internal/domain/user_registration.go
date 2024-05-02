@@ -10,6 +10,53 @@ var (
 )
 
 type UserRegistration struct {
+	id               UserRegistrationID
+	status           UserRegistrationStatus
+	email            UserRegistrationEmail
+	userName         UserName
+	password         HashedUserPassword
+	registrationDate time.Time
+	confirmationDate time.Time
+}
+
+func NewUserRegistration(
+	userName UserName,
+	password HashedUserPassword,
+	email UserRegistrationEmail,
+) (*UserRegistration, error) {
+	return &UserRegistration{
+		NewUserRegistrationID(),
+		WaitForConfirmation,
+		email,
+		userName,
+		password,
+		time.Now(),
+		time.Time{},
+	}, nil
+}
+
+func MustCreateUserRegistrationFromSnapshot(snapshot UserRegistrationSnapshot) *UserRegistration {
+	return &UserRegistration{
+		snapshot.ID,
+		snapshot.Status,
+		snapshot.Email,
+		snapshot.UserName,
+		snapshot.Password,
+		snapshot.RegistrationDate,
+		snapshot.ConfirmationDate,
+	}
+}
+
+func (u *UserRegistration) Confirm() error {
+	if u.status == Confirmed {
+		return ErrUserRegistrationCannotBeConfirmedMoreThanOnce
+	}
+	u.status = Confirmed
+	u.confirmationDate = time.Now()
+	return nil
+}
+
+type UserRegistrationSnapshot struct {
 	ID               UserRegistrationID
 	Status           UserRegistrationStatus
 	Email            UserRegistrationEmail
@@ -19,26 +66,39 @@ type UserRegistration struct {
 	ConfirmationDate time.Time
 }
 
-func RegisterNewUser(
+func NewUserRegistrationSnapshot(
 	userName UserName,
 	password HashedUserPassword,
-	email UserRegistrationEmail) (*UserRegistration, error) {
-	return &UserRegistration{
-		ID:               NewUserRegistrationID(),
-		Status:           WaitForConfirmation,
-		Email:            email,
-		UserName:         userName,
-		Password:         password,
-		RegistrationDate: time.Now(),
-		ConfirmationDate: time.Time{},
+	email UserRegistrationEmail,
+) (*UserRegistrationSnapshot, error) {
+	return &UserRegistrationSnapshot{
+		NewUserRegistrationID(),
+		WaitForConfirmation,
+		email,
+		userName,
+		password,
+		time.Now(),
+		time.Time{},
 	}, nil
 }
 
-func (u *UserRegistration) Confirm() error {
-	if u.Status == Confirmed {
-		return ErrUserRegistrationCannotBeConfirmedMoreThanOnce
-	}
-	u.Status = Confirmed
-	u.ConfirmationDate = time.Now()
-	return nil
+func NewUserRegistrationSnapshotFull(
+	id UserRegistrationID,
+	status UserRegistrationStatus,
+	email UserRegistrationEmail,
+	name UserName,
+	password HashedUserPassword,
+	registrationDate time.Time,
+	confirmationDate time.Time,
+
+) (*UserRegistrationSnapshot, error) {
+	return &UserRegistrationSnapshot{
+		id,
+		status,
+		email,
+		name,
+		password,
+		registrationDate,
+		confirmationDate,
+	}, nil
 }
