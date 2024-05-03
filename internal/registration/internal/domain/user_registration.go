@@ -56,6 +56,18 @@ func (u *UserRegistration) Confirm() error {
 	return nil
 }
 
+func (u *UserRegistration) GetSnapshot() UserRegistrationSnapshot {
+	return MustCreateUserRegistrationSnapshot(
+		u.id,
+		u.status,
+		u.email,
+		u.userName,
+		u.password,
+		u.registrationDate,
+		u.confirmationDate,
+	)
+}
+
 type UserRegistrationSnapshot struct {
 	ID               UserRegistrationID
 	Status           UserRegistrationStatus
@@ -66,23 +78,7 @@ type UserRegistrationSnapshot struct {
 	ConfirmationDate time.Time
 }
 
-func NewUserRegistrationSnapshot(
-	userName UserName,
-	password HashedUserPassword,
-	email UserRegistrationEmail,
-) (*UserRegistrationSnapshot, error) {
-	return &UserRegistrationSnapshot{
-		NewUserRegistrationID(),
-		WaitForConfirmation,
-		email,
-		userName,
-		password,
-		time.Now(),
-		time.Time{},
-	}, nil
-}
-
-func NewUserRegistrationSnapshotFull(
+func MustCreateUserRegistrationSnapshot(
 	id UserRegistrationID,
 	status UserRegistrationStatus,
 	email UserRegistrationEmail,
@@ -91,8 +87,8 @@ func NewUserRegistrationSnapshotFull(
 	registrationDate time.Time,
 	confirmationDate time.Time,
 
-) (*UserRegistrationSnapshot, error) {
-	return &UserRegistrationSnapshot{
+) UserRegistrationSnapshot {
+	return UserRegistrationSnapshot{
 		id,
 		status,
 		email,
@@ -100,5 +96,5 @@ func NewUserRegistrationSnapshotFull(
 		password,
 		registrationDate,
 		confirmationDate,
-	}, nil
+	}
 }
