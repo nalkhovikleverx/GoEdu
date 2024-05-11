@@ -49,3 +49,4 @@ go test -v ./...
 - [VaughnVernon Implementing DDD reference](https://github.com/VaughnVernon/IDDD_Samples)
 - [Event-driven Architecture in Go book reference](https://github.com/PacktPublishing/Event-Driven-Architecture-in-Golang)
 - [eShop reference application by .NET team](https://github.com/dotnet/eShop)
+- ["How modular can your monolith go" series by Chris Richardson](https://microservices.io/post/architecture/2023/07/31/how-modular-can-your-monolith-go-part-1.html)
