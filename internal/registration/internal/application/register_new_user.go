@@ -47,7 +47,7 @@ func (r *RegisterNewUserCommandHandler) Handle(ctx context.Context, command Comm
 		return RegisterNewUserCommandResult{}, err
 	}
 
-	user, err := domain.RegisterNewUser(
+	user, err := domain.NewUserRegistration(
 		userName,
 		h,
 		regNewUserCommand.Email,

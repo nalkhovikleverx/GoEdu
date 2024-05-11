@@ -10,3 +10,7 @@ type UserRegistrationEvent struct {
 	LastName         string
 	RegistrationDate time.Time
 }
+
+// temporarily for ci/cd checks
+
+var _ UserRegistrationEvent = UserRegistrationEvent{}
