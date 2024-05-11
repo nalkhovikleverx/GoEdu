@@ -3,15 +3,21 @@
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 !define ICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0
 !includeurl ICONS/devicons/go.puml
+!includeurl ICONS/devicons2/typescript.puml
 
+AddElementTag("typescript", $sprite="typescript")
 AddElementTag("golang", $bgColor="#86D4DE", $fontColor="black", $sprite="go")
 
 System_Boundary(c1, "Abstract System") {
-    Boundary(monolith, "Abstract System Monolith Application") {
-        Component(userAccessModule, "User Access", "Go package", $tags="golang")
-        Component(registrationsModule, "User Registrations", "Go package", $tags="golang")
-        ComponentQueue(eventsBus, "Events Bus", "In memory", $tags="golang")
+    Container(FEClient, "FE-Client", "Front-end", "GUI for the application", $tags="typescript")
 
+    Boundary(monolith, "Abstract System Monolith Application") {
+        Component(API, "API", "HTTP", $tags="golang")
+
+        Component(userAccessModule, "User Access", "Go package", $tags="golang")
+        Component(registrationModule, "User Registrations", "Go package", $tags="golang")
+
+        ComponentQueue(eventsBus, "Events Bus", "In memory", $tags="golang")
         Boundary(database, "Storage") {
             ComponentDb(userAccessData, "User Access data", "in-memory", $tags="golang")
             ComponentDb(registrationsData, "Registrations data", "in-memory", $tags="golang")
@@ -19,11 +25,16 @@ System_Boundary(c1, "Abstract System") {
     }
 }
 
+Rel(FEClient, API, "Uses", "HTTP")
+
+Rel(API, userAccessModule, "Uses")
+Rel(API, registrationModule, "Uses")
+
 Rel(userAccessModule, eventsBus, "Publishes event to / subscribes")
-Rel(registrationsModule, eventsBus, "Publishes event to / subscribes")
+Rel(registrationModule, eventsBus, "Publishes event to / subscribes")
 
 Rel(userAccessModule, userAccessData, "Store / retrieve")
-Rel(registrationsModule, registrationsData, "Store / retrieve")
+Rel(registrationModule, registrationsData, "Store / retrieve")
 
 LAYOUT_WITH_LEGEND()
 
