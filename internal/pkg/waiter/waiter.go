@@ -66,7 +66,7 @@ func (w *waiter) Cleanup(fns ...CleanupFunc) {
 	w.cleanupFuncs = append(w.cleanupFuncs, fns...)
 }
 
-func (w *waiter) Wait() (err error) {
+func (w *waiter) Wait() error {
 	g, ctx := errgroup.WithContext(w.ctx)
 
 	g.Go(func() error {

@@ -1,0 +1,20 @@
+type: object
+
+properties:
+  id:
+    description: >-
+      A short identifier corresponding to the HTTP status code returned. For
+      example, the ID for a response returning a 404 status code would be "not_found."
+    type: string
+    example: not_found
+
+  message:
+    description: >-
+      A message providing additional information about the error, including
+      details to help resolve it when possible.
+    type: string
+    example: The resource you were accessing could not be found.
+
+required:
+  - id
+  - message

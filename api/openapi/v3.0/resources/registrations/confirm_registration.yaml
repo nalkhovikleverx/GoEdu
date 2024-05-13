@@ -1,0 +1,16 @@
+operationId: registration_confirm
+description: Confirm user registration
+summary: Confirm user registration
+tags:
+  - registrations
+parameters:
+  - $ref: 'parameters.yaml#/registration_uuid'
+responses:
+  '200':
+    $ref: '../../shared/responses/success_without_response.yaml'
+
+  '400':
+    $ref: '../../shared/responses/bad_request.yaml'
+
+  '500':
+    $ref: '../../shared/responses/server_error.yaml'

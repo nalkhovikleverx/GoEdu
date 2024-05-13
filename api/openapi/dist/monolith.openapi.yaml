@@ -1,0 +1,148 @@
+openapi: 3.0.0
+info:
+  title: API-gateway
+  description: OpenAPI definition
+  version: 1.0.0
+servers:
+  - url: http://api.example.com
+tags:
+  - name: user-access
+    description: Operations related to User Access functionality
+  - name: registrations
+    description: Operations related to Registration functionality
+paths:
+  /api/v1/registrations:
+    post:
+      operationId: registration_new
+      summary: Register a new user
+      description: Register a new user
+      tags:
+        - registrations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/new_registration'
+      responses:
+        '200':
+          $ref: '#/components/responses/success_without_response'
+        '400':
+          $ref: '#/components/responses/bad_request'
+        '500':
+          $ref: '#/components/responses/server_error'
+  /api/v1/registrations/{registration_uuid}/confirm:
+    post:
+      operationId: registration_confirm
+      description: Confirm user registration
+      summary: Confirm user registration
+      tags:
+        - registrations
+      parameters:
+        - $ref: '#/components/parameters/registration_uuid'
+      responses:
+        '200':
+          $ref: '#/components/responses/success_without_response'
+        '400':
+          $ref: '#/components/responses/bad_request'
+        '500':
+          $ref: '#/components/responses/server_error'
+  /api/v1/user-access/login:
+    post:
+      operationId: user-access_login
+      summary: User Login
+      description: User Login
+      tags:
+        - user-access
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/login'
+      responses:
+        '200':
+          $ref: '#/components/responses/success_without_response'
+        '400':
+          $ref: '#/components/responses/bad_request'
+        '500':
+          $ref: '#/components/responses/server_error'
+components:
+  schemas:
+    new_registration:
+      title: New Registration Request
+      allOf:
+        - type: object
+          required:
+            - firstName
+            - lastName
+            - email
+            - password
+          properties:
+            firstName:
+              type: string
+            lastName:
+              type: string
+            email:
+              type: string
+              format: email
+            password:
+              type: string
+    error:
+      type: object
+      properties:
+        id:
+          description: A short identifier corresponding to the HTTP status code returned. For example, the ID for a response returning a 404 status code would be "not_found."
+          type: string
+          example: not_found
+        message:
+          description: A message providing additional information about the error, including details to help resolve it when possible.
+          type: string
+          example: The resource you were accessing could not be found.
+      required:
+        - id
+        - message
+    login:
+      title: Login Request
+      allOf:
+        - type: object
+          required:
+            - email
+            - password
+          properties:
+            email:
+              type: string
+              format: email
+            password:
+              type: string
+  responses:
+    success_without_response:
+      description: Success without response
+    bad_request:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            id: bad_request
+            message: error parsing request body
+    server_error:
+      description: Server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            id: server_error
+            message: Unexpected server-side error
+  parameters:
+    registration_uuid:
+      in: path
+      name: registration_uuid
+      description: A unique identifier for a User Registration.
+      required: true
+      schema:
+        type: string
+        format: uuid
+      example: ebc70cfd-8b86-4697-abb6-c6369c8beebd

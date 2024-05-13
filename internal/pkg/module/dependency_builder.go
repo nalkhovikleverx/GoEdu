@@ -63,7 +63,6 @@ func (s *dependency) initHTTPMux() {
 	s.mux = http.DefaultServeMux
 }
 
-func (s *dependency) initTraceProvider() error {
+func (s *dependency) initTraceProvider() {
 	s.tp = noop.NewTracerProvider()
-	return nil
 }
