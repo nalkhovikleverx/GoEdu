@@ -1,4 +1,4 @@
-.PHONY: lint adr-lint plantuml generate test openapi build run
+.PHONY: lint adr-lint plantuml generate test openapi build run docker-image
 
 lint:
 	golangci-lint run
@@ -25,3 +25,6 @@ build: lint generate
 
 run: lint
 	go run cmd/monolith/main.go
+
+docker-image:
+	docker build -t goedu -f docker/Dockerfile .
