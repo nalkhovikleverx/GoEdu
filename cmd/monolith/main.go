@@ -36,6 +36,7 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	d.Logger().Info("dependencies initialized", "config", d.Config())
 	m := monolith{
 		cfg:          cfg,
 		dependencies: d,

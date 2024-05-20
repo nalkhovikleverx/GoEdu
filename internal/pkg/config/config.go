@@ -1,6 +1,7 @@
 package config
 
 import (
+	"log/slog"
 	"net"
 	"os"
 	"runtime/debug"
@@ -18,6 +19,14 @@ type HTTP struct {
 
 func (h HTTP) Address() string {
 	return net.JoinHostPort(h.Host, h.Port)
+}
+
+func (h HTTP) LogValue() slog.Value {
+	return slog.GroupValue(
+		slog.String("host", h.Host),
+		slog.String("port", h.Port),
+		slog.String("readHeaderTimeout", h.ReadHeaderTimeout.String()),
+	)
 }
 
 type VCSInfo struct {
@@ -61,4 +70,14 @@ func InitConfig() (*Config, error) {
 		return nil, err
 	}
 	return &cfg, envconfig.Process("", &cfg)
+}
+
+func (c Config) LogValue() slog.Value {
+	return slog.GroupValue(
+		slog.String("serviceName", c.ServiceName),
+		slog.String("env", c.Environment),
+		slog.String("logLevel", c.LogLevel),
+		slog.Any("http", c.HTTP),
+		slog.String("shutdownTimeout", c.ShutdownTimeout.String()),
+	)
 }
