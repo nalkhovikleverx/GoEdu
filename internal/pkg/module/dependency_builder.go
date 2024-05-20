@@ -55,7 +55,11 @@ func (s *dependency) initLogger() {
 		lvl = slog.LevelInfo
 	}
 	s.logger = logger.New(logger.Config{
-		Level: lvl,
+		Service:      s.config.ServiceName,
+		Level:        lvl,
+		VCSRevision:  s.config.VCS.Revision,
+		VCSTag:       s.config.VCS.Tag,
+		VCSBuildTime: s.config.VCS.Time,
 	})
 }
 

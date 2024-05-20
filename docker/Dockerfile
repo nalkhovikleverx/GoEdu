@@ -2,6 +2,7 @@ FROM golang:1.22-alpine as build-env
 
 WORKDIR /app
 
+RUN apk --update add ca-certificates git
 COPY go.* ./
 RUN go mod download
 

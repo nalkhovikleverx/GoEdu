@@ -7,14 +7,23 @@ import (
 )
 
 type Config struct {
-	Level slog.Level
+	Level        slog.Level
+	Service      string
+	VCSRevision  string
+	VCSTag       string
+	VCSBuildTime string
 }
 
 func New(cfg Config) *slog.Logger {
 	l := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		AddSource: true,
+		AddSource: false,
 		Level:     cfg.Level,
-	}))
+	})).With(
+		"vcs.revision", cfg.VCSRevision,
+		"vcs.tag", cfg.VCSTag,
+		"vcs.time", cfg.VCSBuildTime,
+		"service", cfg.Service,
+	)
 	slog.SetDefault(l)
 	return l
 }
