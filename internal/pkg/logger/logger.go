@@ -6,12 +6,16 @@ import (
 	"os"
 )
 
+type VCSConfig struct {
+	Revision  string
+	Tag       string
+	BuildTime string
+}
+
 type Config struct {
-	Level        slog.Level
-	Service      string
-	VCSRevision  string
-	VCSTag       string
-	VCSBuildTime string
+	Level   slog.Level
+	Service string
+	VCS     VCSConfig
 }
 
 func New(cfg Config) *slog.Logger {
@@ -19,9 +23,9 @@ func New(cfg Config) *slog.Logger {
 		AddSource: false,
 		Level:     cfg.Level,
 	})).With(
-		"vcs.revision", cfg.VCSRevision,
-		"vcs.tag", cfg.VCSTag,
-		"vcs.time", cfg.VCSBuildTime,
+		"vcs.revision", cfg.VCS.Revision,
+		"vcs.tag", cfg.VCS.Tag,
+		"vcs.time", cfg.VCS.BuildTime,
 		"service", cfg.Service,
 	)
 	slog.SetDefault(l)
