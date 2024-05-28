@@ -29,38 +29,38 @@ func (r CreateNewUserRepoMock) Update(_ context.Context, _ *domain.UserRegistrat
 	return nil
 }
 
-var _ application.UniqueEmailVerifier = (*UniqueEmailVerifierSpy)(nil)
+var _ application.UniqueEmailVerifier = (*UniqueEmailVerifierSpyChecker)(nil)
 
-type UniqueEmailVerifierSpy struct {
+type UniqueEmailVerifierSpyChecker struct {
 	checked bool
 }
 
-func (u *UniqueEmailVerifierSpy) IsUnique(_ context.Context, _ domain.UserRegistrationEmail) error {
+func (u *UniqueEmailVerifierSpyChecker) IsUnique(_ context.Context, _ domain.UserRegistrationEmail) error {
 	u.checked = true
 	return nil
 }
 
-var _ application.PasswordHasher = (*PasswordHasherSpy)(nil)
+var _ application.PasswordHasher = (*PasswordHasherSpyChecker)(nil)
 
-type PasswordHasherSpy struct {
+type PasswordHasherSpyChecker struct {
 	hashed bool
 }
 
-func (p *PasswordHasherSpy) Hash(password domain.UserPassword) (domain.HashedUserPassword, error) {
+func (p *PasswordHasherSpyChecker) Hash(password domain.UserPassword) (domain.HashedUserPassword, error) {
 	p.hashed = true
 	return domain.NewHashedUserPassword(password), nil
 }
 
 func TestPositiveCreateNewUserRegistration(t *testing.T) {
 	tests := map[string]struct {
-		verifier   *UniqueEmailVerifierSpy
-		hasher     *PasswordHasherSpy
+		verifier   *UniqueEmailVerifierSpyChecker
+		hasher     *PasswordHasherSpyChecker
 		repository *CreateNewUserRepoMock
 		command    application.CreateUserCommand
 	}{
 		"successful Create user registration": {
-			verifier:   &UniqueEmailVerifierSpy{},
-			hasher:     &PasswordHasherSpy{},
+			verifier:   &UniqueEmailVerifierSpyChecker{},
+			hasher:     &PasswordHasherSpyChecker{},
 			repository: &CreateNewUserRepoMock{},
 			command: application.CreateUserCommand{
 				FirstName: "a",
