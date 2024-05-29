@@ -24,7 +24,7 @@ This is a list of the main goals of this repository:
 
 - Get experience of implementing a monolith in a modular way in Go
 - Applying software engineering *best practices* (Clean Architecture, Design Patterns, Testable Design etc)
-- Keeping design artifacts alongside with the source code: **C4 Model**, **diagram as code**, **ADR**
+- Keeping design artifacts alongside with the source code: **C4 Model**, **OpenAPI spec**, **ADR**
 
 ## 2. How to Run
 
@@ -37,9 +37,12 @@ go test -v ./...
 ### 2.1 Tools Used
 
 - [golangci-lint](https://golangci-lint.run/)
-- [go-cleanarch](https://github.com/roblaszczak/go-cleanarch)
+- [go-cleanarch](https://github.com/roblaszczak/go-cleanarch) to check the dependency rule
 - [plantUML](https://github.com/plantuml/plantuml)
-- [markdownlint (for ADR)](https://github.com/DavidAnson/markdownlint)
+- [markdownlint](https://github.com/DavidAnson/markdownlint) to lint ADR
+- [Redocly](https://redocly.com/docs/cli/installation/#install-redocly-cli) to bundle and lint OpenAPI
+- [oapi-codegen](https://github.com/deepmap/oapi-codegen) to generate HTTP server from API spec
+- Docker
 
 ## 3. Inspirations and Recommendations
 

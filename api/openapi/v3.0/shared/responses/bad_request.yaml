@@ -1,0 +1,9 @@
+description: Bad Request
+
+content:
+  application/json:
+    schema:
+      $ref: '../models/error.yaml'
+    example:
+      id: bad_request
+      message: error parsing request body

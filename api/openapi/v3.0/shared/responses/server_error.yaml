@@ -1,0 +1,9 @@
+description: Server error.
+
+content:
+  application/json:
+    schema:
+      $ref: '../models/error.yaml'
+    example:
+      id: server_error
+      message: Unexpected server-side error

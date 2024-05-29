@@ -1,0 +1,9 @@
+registration_uuid:
+  in: path
+  name: registration_uuid
+  description: A unique identifier for a User Registration.
+  required: true
+  schema:
+    type: string
+    format: uuid
+  example: ebc70cfd-8b86-4697-abb6-c6369c8beebd

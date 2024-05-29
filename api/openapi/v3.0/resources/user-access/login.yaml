@@ -1,0 +1,22 @@
+operationId: user-access_login
+summary: User Login
+description: User Login
+tags:
+  - user-access
+
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: 'models/login.yaml'
+
+responses:
+  '200':
+    $ref: '../../shared/responses/success_without_response.yaml'
+
+  '400':
+    $ref: '../../shared/responses/bad_request.yaml'
+
+  '500':
+    $ref: '../../shared/responses/server_error.yaml'

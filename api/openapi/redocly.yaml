@@ -1,0 +1,10 @@
+extends:
+  - recommended
+
+apis:
+  monolith@v1:
+    root: ./api/openapi/v3.0/spec.yaml
+    rules:
+      info-license: off
+      security-defined: off # turn on later
+      no-server-example.com: off # turn on later
