@@ -20,11 +20,11 @@ openapi:
 	redocly bundle --output ./api/openapi/dist/monolith.openapi.yaml --config ./api/openapi/redocly.yaml monolith@v1 --ext yaml
 	@$(MAKE) generate
 
-build: lint generate
+build: openapi lint
 	go build -o bin/monolith cmd/monolith/main.go
 
-run: lint
+run: openapi lint
 	go run cmd/monolith/main.go
 
-docker-image:
+docker-image: openapi
 	docker build -t goedu -f docker/Dockerfile .

@@ -10,7 +10,15 @@ This is educational and reference project created to demonstrate how can we impl
 
 [2. How to Run](#2-how-to-run)
 
-&nbsp;&nbsp;[2.1 Tools Used](#21-tools-used)
+&nbsp;&nbsp;[2.1 Running the application from scratch](#21-running-the-application-from-scratch)
+
+&nbsp;&nbsp;[2.2 Make Binary](#22-make-binary)
+
+&nbsp;&nbsp;[2.3 Build Docker image](#23-build-docker-image)
+
+&nbsp;&nbsp;[2.4 Run Tests](#24-run-tests)
+
+&nbsp;&nbsp;[2.5 Tools Used](#25-tools-used)
 
 [3. Inspirations](#2-inspirations)
 
@@ -28,13 +36,31 @@ This is a list of the main goals of this repository:
 
 ## 2. How to Run
 
-For now only you can do is run the tests:
+### 2.1 Running the application from scratch:
 
 ```bash
-go test -v ./...
+make run
 ```
 
-### 2.1 Tools Used
+### 2.2 Make binary
+
+```bash
+make build
+```
+
+### 2.3 Build Docker image
+
+```bash
+make docker-image
+```
+
+### 2.4 Run tests
+
+```bash
+make test
+```
+
+### 2.5 Tools Used
 
 - [golangci-lint](https://golangci-lint.run/)
 - [go-cleanarch](https://github.com/roblaszczak/go-cleanarch) to check the dependency rule
