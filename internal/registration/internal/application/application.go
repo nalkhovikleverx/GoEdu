@@ -20,7 +20,7 @@ var (
 )
 
 type UniqueEmailVerifier interface {
-	IsUnique(context.Context, domain.UserRegistrationEmail) error
+	IsUnique(context.Context, domain.UserRegistrationEmail) (bool, error)
 }
 
 type PasswordHasher interface {
@@ -31,4 +31,5 @@ type UserRegistrationRepository interface {
 	Add(context.Context, *domain.UserRegistration) error
 	Load(context.Context, domain.UserRegistrationID) (*domain.UserRegistration, error)
 	Update(context.Context, *domain.UserRegistration) error
+	GetAll(context.Context) []domain.UserRegistration
 }

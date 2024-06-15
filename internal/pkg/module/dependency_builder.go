@@ -9,9 +9,12 @@ import (
 
 	"GoEdu/internal/pkg/config"
 	"GoEdu/internal/pkg/logger"
+	"GoEdu/internal/registration/api"
+	"GoEdu/internal/registration/api/registration"
 )
 
 type dependency struct {
+	reg    registration.RegistrationModuleFacade
 	config *config.Config
 	logger *slog.Logger
 	mux    *http.ServeMux
@@ -23,6 +26,7 @@ func BuildDefaultDependencies(cfg *config.Config) (Dependencies, error) {
 	d.initLogger()
 	d.initHTTPMux()
 	d.initTraceProvider()
+	d.initRegistration()
 	return d, nil
 }
 
@@ -40,6 +44,10 @@ func (s *dependency) HTTP() *http.ServeMux {
 
 func (s *dependency) TraceProvider() trace.TracerProvider {
 	return s.tp
+}
+
+func (s *dependency) Registration() registration.RegistrationModuleFacade {
+	return s.reg
 }
 
 func (s *dependency) initLogger() {
@@ -71,4 +79,8 @@ func (s *dependency) initHTTPMux() {
 
 func (s *dependency) initTraceProvider() {
 	s.tp = noop.NewTracerProvider()
+}
+
+func (s *dependency) initRegistration() {
+	s.reg = api.DefaultRegistrationModuleFacade
 }

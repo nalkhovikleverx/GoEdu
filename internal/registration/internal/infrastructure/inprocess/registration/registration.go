@@ -1,4 +1,4 @@
-package inprocess
+package memory
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"GoEdu/internal/registration/api/registration"
 	"GoEdu/internal/registration/internal/application"
 	"GoEdu/internal/registration/internal/domain"
+	"GoEdu/internal/registration/internal/infrastructure/inprocess/repository/memory"
 )
 
 var _ registration.RegistrationModuleFacade = (*RegistrationModuleFacade)(nil)
@@ -26,9 +27,9 @@ func NewRegistrationModuleFacade(
 }
 
 func CreateNewInProcessRegistrationModuleFacade() *RegistrationModuleFacade {
-	repo := NewRepository()
+	repo := memory.NewRepository()
 	hasher := SimpleHasher{}
-	verificator := SimpleVerifier{repo: repo}
+	verificator := NewVerifier(repo)
 	confirmationHandler := application.NewConfirmUserRegistrationCommandHandler(repo)
 	registrationHander := application.NewRegisterNewUserCommandHandler(hasher, repo, verificator)
 
@@ -63,14 +64,21 @@ func (s SimpleHasher) Hash(password domain.UserPassword) (domain.HashedUserPassw
 var _ application.UniqueEmailVerifier = (*SimpleVerifier)(nil)
 
 type SimpleVerifier struct {
-	repo *InProcessRepository
+	repo application.UserRegistrationRepository
 }
 
-func (s SimpleVerifier) IsUnique(ctx context.Context, email domain.UserRegistrationEmail) error {
-	for _, u := range s.repo.store {
-		if u.GetSnapshot().Email == email {
-			return application.ErrUserEmailMustBeUnique
+func NewVerifier(repo application.UserRegistrationRepository) *SimpleVerifier {
+	return &SimpleVerifier{
+		repo: repo,
+	}
+}
+
+func (s SimpleVerifier) IsUnique(ctx context.Context, email domain.UserRegistrationEmail) (bool, error) {
+	all := s.repo.GetAll(ctx)
+	for _, v := range all {
+		if v.GetSnapshot().Email == email {
+			return false, application.ErrUserEmailMustBeUnique
 		}
 	}
-	return nil
+	return true, nil
 }

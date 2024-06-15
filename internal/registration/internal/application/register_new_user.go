@@ -32,7 +32,7 @@ type RegisterNewUserCommandHandler struct {
 func (r *RegisterNewUserCommandHandler) Handle(ctx context.Context, command Command) (CommandResult, error) {
 	regNewUserCommand := command.(RegisterNewUserCommand)
 
-	err := r.verifier.IsUnique(ctx, regNewUserCommand.Email)
+	_, err := r.verifier.IsUnique(ctx, regNewUserCommand.Email)
 	if err != nil {
 		return RegisterNewUserCommandResult{}, err
 	}

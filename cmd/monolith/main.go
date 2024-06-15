@@ -12,6 +12,7 @@ import (
 	"GoEdu/internal/pkg/config"
 	"GoEdu/internal/pkg/module"
 	"GoEdu/internal/pkg/waiter"
+	"GoEdu/internal/registration"
 )
 
 type monolith struct {
@@ -42,6 +43,7 @@ func run() error {
 		dependencies: d,
 		modules: []module.Module{
 			&httpapi.Module{},
+			&registration.Module{},
 		},
 		waiter: waiter.New(waiter.CatchSignals()),
 	}
