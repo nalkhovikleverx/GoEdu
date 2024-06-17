@@ -1,4 +1,4 @@
-package registration
+package inprocess
 
 import (
 	"context"

@@ -7,18 +7,24 @@ import (
 
 	"GoEdu/internal/api/http/server"
 	"GoEdu/internal/pkg/logger"
+	"GoEdu/internal/registration/api/inprocess"
 )
 
 type registrationHTTPController struct {
-	tracer trace.Tracer
+	registrationAPI inprocess.RegistrationModuleFacade
+	tracer          trace.Tracer
 }
 
-func newRegistrationHTTPController(t trace.Tracer) *registrationHTTPController {
-	return &registrationHTTPController{tracer: t}
+func newRegistrationHTTPController(
+	t trace.Tracer,
+	rAPI inprocess.RegistrationModuleFacade,
+) *registrationHTTPController {
+	return &registrationHTTPController{tracer: t, registrationAPI: rAPI}
 }
 
 func (c *registrationHTTPController) RegistrationNew(w http.ResponseWriter, r *http.Request) {
 	logger.FromContext(r.Context()).Info("registration new")
+	_, _ = c.registrationAPI.RegisterNewUser(r.Context(), inprocess.RegisterNewUserCommand{})
 	w.WriteHeader(http.StatusNotImplemented)
 }
 

@@ -13,13 +13,13 @@ type RegisterNewUserCommand struct {
 	Password  domain.UserPassword
 }
 
-type RegisterNewUserCommandResult struct {
-}
+type RegisterNewUserCommandResult struct{}
 
 func NewRegisterNewUserCommandHandler(
 	hasher PasswordHasher,
 	repository UserRegistrationRepository,
-	verifier UniqueEmailVerifier) *RegisterNewUserCommandHandler {
+	verifier UniqueEmailVerifier,
+) *RegisterNewUserCommandHandler {
 	return &RegisterNewUserCommandHandler{hasher: hasher, repository: repository, verifier: verifier}
 }
 

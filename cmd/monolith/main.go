@@ -42,8 +42,8 @@ func run() error {
 		cfg:          cfg,
 		dependencies: d,
 		modules: []module.Module{
-			&httpapi.Module{},
 			&registration.Module{},
+			&httpapi.Module{},
 		},
 		waiter: waiter.New(waiter.CatchSignals()),
 	}

@@ -4,17 +4,16 @@ import (
 	"log/slog"
 	"net/http"
 
-	"go.opentelemetry.io/otel/trace"
-	"go.opentelemetry.io/otel/trace/noop"
-
 	"GoEdu/internal/pkg/config"
 	"GoEdu/internal/pkg/logger"
-	"GoEdu/internal/registration/api"
-	"GoEdu/internal/registration/api/registration"
+	"GoEdu/internal/registration/api/inprocess"
+
+	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 )
 
 type dependency struct {
-	reg    registration.RegistrationModuleFacade
+	reg    inprocess.RegistrationModuleFacade
 	config *config.Config
 	logger *slog.Logger
 	mux    *http.ServeMux
@@ -46,8 +45,12 @@ func (s *dependency) TraceProvider() trace.TracerProvider {
 	return s.tp
 }
 
-func (s *dependency) Registration() registration.RegistrationModuleFacade {
+func (s *dependency) RegistrationAPI() inprocess.RegistrationModuleFacade {
 	return s.reg
+}
+
+func (s *dependency) SetRegistrationAPI(f inprocess.RegistrationModuleFacade) {
+	s.reg = f
 }
 
 func (s *dependency) initLogger() {
@@ -82,5 +85,5 @@ func (s *dependency) initTraceProvider() {
 }
 
 func (s *dependency) initRegistration() {
-	s.reg = api.DefaultRegistrationModuleFacade
+	s.reg = nil
 }
