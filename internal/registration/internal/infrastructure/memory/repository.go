@@ -43,11 +43,3 @@ func (i *InProcessRepository) Update(_ context.Context, registration *domain.Use
 	}
 	return errors.New("this user doesn't exist")
 }
-
-func (i *InProcessRepository) GetAll(_ context.Context) []domain.UserRegistration {
-	temp := make([]domain.UserRegistration, 0, len(i.store))
-	for _, val := range i.store {
-		temp = append(temp, *domain.MustCreateUserRegistrationFromSnapshot(val))
-	}
-	return temp
-}

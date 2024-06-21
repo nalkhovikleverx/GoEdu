@@ -31,5 +31,4 @@ type UserRegistrationRepository interface {
 	Add(context.Context, *domain.UserRegistration) error
 	Load(context.Context, domain.UserRegistrationID) (*domain.UserRegistration, error)
 	Update(context.Context, *domain.UserRegistration) error
-	GetAll(context.Context) []domain.UserRegistration
 }

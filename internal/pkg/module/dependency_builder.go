@@ -25,7 +25,6 @@ func BuildDefaultDependencies(cfg *config.Config) (Dependencies, error) {
 	d.initLogger()
 	d.initHTTPMux()
 	d.initTraceProvider()
-	d.initRegistration()
 	return d, nil
 }
 
@@ -82,8 +81,4 @@ func (s *dependency) initHTTPMux() {
 
 func (s *dependency) initTraceProvider() {
 	s.tp = noop.NewTracerProvider()
-}
-
-func (s *dependency) initRegistration() {
-	s.reg = nil
 }

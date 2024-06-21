@@ -6,7 +6,7 @@ import (
 	"GoEdu/internal/pkg/module"
 	"GoEdu/internal/registration/internal/application"
 	"GoEdu/internal/registration/internal/domain"
-	"GoEdu/internal/registration/internal/infrastructure/inprocess/repository/memory"
+	"GoEdu/internal/registration/internal/infrastructure/memory"
 	"GoEdu/internal/registration/internal/interfaces/inprocess"
 )
 
@@ -27,10 +27,10 @@ func (s SimpleHasher) Hash(password domain.UserPassword) (domain.HashedUserPassw
 var _ application.UniqueEmailVerifier = (*SimpleVerifier)(nil)
 
 type SimpleVerifier struct {
-	repo application.UserRegistrationRepository
+	repo *memory.InProcessRepository
 }
 
-func NewVerifier(repo application.UserRegistrationRepository) *SimpleVerifier {
+func NewVerifier(repo *memory.InProcessRepository) *SimpleVerifier {
 	return &SimpleVerifier{
 		repo: repo,
 	}

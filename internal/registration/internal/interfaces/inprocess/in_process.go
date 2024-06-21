@@ -28,14 +28,24 @@ func (r inprocessModuleFacade) RegisterNewUser(
 	ctx context.Context,
 	command inprocess.RegisterNewUserCommand,
 ) (inprocess.RegisterNewUserCommandResult, error) {
-	res, err := r.inprocessHandler.Handle(ctx, command)
-	return res.(inprocess.RegisterNewUserCommandResult), err
+	cmd, err := FromRequestToRegisterNewUserCommand(command)
+	if err != nil {
+		return inprocess.RegisterNewUserCommandResult{}, err
+	}
+
+	res, err := r.inprocessHandler.Handle(ctx, cmd)
+	return FromApplicationToRegisterNewUserCommandResult(res), err
 }
 
 func (r inprocessModuleFacade) ConfirmRegistration(
 	ctx context.Context,
 	command inprocess.ConfirmRegistrationCommand,
 ) (inprocess.ConfirmRegistrationCommandResult, error) {
-	res, err := r.confirmationHandler.Handle(ctx, command)
-	return res.(inprocess.ConfirmRegistrationCommandResult), err
+	cmd, err := FromRequestToConfirmUserRegistrationCommand(command)
+	if err != nil {
+		return inprocess.ConfirmRegistrationCommandResult{}, err
+	}
+
+	res, err := r.confirmationHandler.Handle(ctx, cmd)
+	return FromApplicationToConfirmRegistrationCommandResult(res), err
 }

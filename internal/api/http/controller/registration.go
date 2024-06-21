@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"go.opentelemetry.io/otel/trace"
@@ -24,8 +25,27 @@ func newRegistrationHTTPController(
 
 func (c *registrationHTTPController) RegistrationNew(w http.ResponseWriter, r *http.Request) {
 	logger.FromContext(r.Context()).Info("registration new")
-	_, _ = c.registrationAPI.RegisterNewUser(r.Context(), inprocess.RegisterNewUserCommand{})
-	w.WriteHeader(http.StatusNotImplemented)
+	cmd := inprocess.RegisterNewUserCommand{}
+
+	err := json.NewDecoder(r.Body).Decode(&cmd)
+	if err != nil {
+		logger.FromContext(r.Context()).Error(
+			"Server process request with error.", "err", err, "body", r.Body,
+		)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	_, err = c.registrationAPI.RegisterNewUser(r.Context(), cmd)
+
+	if err != nil {
+		logger.FromContext(r.Context()).Error(
+			"Error occurred when server tried to register new user.", "err", err)
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	logger.FromContext(r.Context()).Info("Successfully registered new user")
+	w.WriteHeader(http.StatusCreated)
 }
 
 func (c *registrationHTTPController) RegistrationConfirm(
@@ -33,8 +53,15 @@ func (c *registrationHTTPController) RegistrationConfirm(
 	r *http.Request,
 	registrationID server.RegistrationUuid,
 ) {
-	ctx := r.Context()
-	l := logger.FromContext(ctx).With("registration_id", registrationID)
-	l.Info("registration confirmed")
-	w.WriteHeader(http.StatusNotImplemented)
+	logger.FromContext(r.Context()).Info("registration confirm.", "regId", registrationID)
+	cmd := inprocess.ConfirmRegistrationCommand{RegistrationID: registrationID}
+
+	_, err := c.registrationAPI.ConfirmRegistration(r.Context(), cmd)
+	if err != nil {
+		logger.FromContext(r.Context()).Error(
+			"Error occurred when server tried to confirm registration.", "err", err)
+		w.WriteHeader(http.StatusBadRequest)
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

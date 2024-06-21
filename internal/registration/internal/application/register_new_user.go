@@ -32,9 +32,13 @@ type RegisterNewUserCommandHandler struct {
 func (r *RegisterNewUserCommandHandler) Handle(ctx context.Context, command Command) (CommandResult, error) {
 	regNewUserCommand := command.(RegisterNewUserCommand)
 
-	_, err := r.verifier.IsUnique(ctx, regNewUserCommand.Email)
+	isUnique, err := r.verifier.IsUnique(ctx, regNewUserCommand.Email)
 	if err != nil {
 		return RegisterNewUserCommandResult{}, err
+	}
+
+	if !isUnique {
+		return RegisterNewUserCommandResult{}, ErrUserEmailMustBeUnique
 	}
 
 	h, err := r.hasher.Hash(regNewUserCommand.Password)
