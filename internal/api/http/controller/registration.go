@@ -25,9 +25,10 @@ func newRegistrationHTTPController(
 
 func (c *registrationHTTPController) RegistrationNew(w http.ResponseWriter, r *http.Request) {
 	logger.FromContext(r.Context()).Info("registration new")
-	cmd := inprocess.RegisterNewUserCommand{}
 
-	err := json.NewDecoder(r.Body).Decode(&cmd)
+	regNew := server.NewRegistration{}
+
+	err := json.NewDecoder(r.Body).Decode(&regNew)
 	if err != nil {
 		logger.FromContext(r.Context()).Error(
 			"Server process request with error.", "err", err, "body", r.Body,
@@ -36,7 +37,7 @@ func (c *registrationHTTPController) RegistrationNew(w http.ResponseWriter, r *h
 		return
 	}
 
-	_, err = c.registrationAPI.RegisterNewUser(r.Context(), cmd)
+	_, err = c.registrationAPI.RegisterNewUser(r.Context(), FromRequestToRegisterNewUserCommand(regNew))
 
 	if err != nil {
 		logger.FromContext(r.Context()).Error(

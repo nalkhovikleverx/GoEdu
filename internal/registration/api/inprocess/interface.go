@@ -7,10 +7,10 @@ import (
 )
 
 type RegisterNewUserCommand struct {
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
+	FirstName string
+	LastName  string
+	Email     string
+	Password  string
 }
 
 type RegisterNewUserCommandResult struct {
