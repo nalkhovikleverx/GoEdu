@@ -20,12 +20,16 @@ func (r *RegisterNewUserRepoMock) Add(_ context.Context, _ *domain.UserRegistrat
 	r.added = true
 	return nil
 }
-func (r RegisterNewUserRepoMock) Load(
+func (r *RegisterNewUserRepoMock) Load(
 	_ context.Context,
 	_ domain.UserRegistrationID) (*domain.UserRegistration, error) {
 	return &domain.UserRegistration{}, nil
 }
-func (r RegisterNewUserRepoMock) Update(_ context.Context, _ *domain.UserRegistration) error {
+func (r *RegisterNewUserRepoMock) Update(_ context.Context, _ *domain.UserRegistration) error {
+	return nil
+}
+
+func (r *RegisterNewUserRepoMock) GetAll(_ context.Context) []domain.UserRegistration {
 	return nil
 }
 
@@ -35,9 +39,9 @@ type UniqueEmailVerifierSpy struct {
 	checked bool
 }
 
-func (u *UniqueEmailVerifierSpy) IsUnique(_ context.Context, _ domain.UserRegistrationEmail) error {
+func (u *UniqueEmailVerifierSpy) IsUnique(_ context.Context, _ domain.UserRegistrationEmail) (bool, error) {
 	u.checked = true
-	return nil
+	return true, nil
 }
 
 var _ application.PasswordHasher = (*PasswordHasherSpy)(nil)

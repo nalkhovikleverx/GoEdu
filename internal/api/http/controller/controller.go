@@ -4,6 +4,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 
 	"GoEdu/internal/api/http/server"
+	"GoEdu/internal/registration/api/inprocess"
 )
 
 type Controller struct {
@@ -13,9 +14,12 @@ type Controller struct {
 
 var _ server.ServerInterface = (*Controller)(nil)
 
-func New(tracer trace.Tracer) *Controller {
+func New(
+	tracer trace.Tracer,
+	rAPI inprocess.RegistrationModuleFacade,
+) *Controller {
 	return &Controller{
-		registrationHTTPController: newRegistrationHTTPController(tracer),
+		registrationHTTPController: newRegistrationHTTPController(tracer, rAPI),
 		userAccessHTTPController:   newUserAccessHTTPController(tracer),
 	}
 }

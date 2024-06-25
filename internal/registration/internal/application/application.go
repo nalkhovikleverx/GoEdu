@@ -20,7 +20,7 @@ var (
 )
 
 type UniqueEmailVerifier interface {
-	IsUnique(context.Context, domain.UserRegistrationEmail) error
+	IsUnique(context.Context, domain.UserRegistrationEmail) (bool, error)
 }
 
 type PasswordHasher interface {

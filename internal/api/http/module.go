@@ -19,7 +19,7 @@ func Root(ctx context.Context, dep module.Dependencies) error {
 	tp := dep.TraceProvider()
 	log := dep.Logger()
 
-	impl := controller.New(tp.Tracer("controller"))
+	impl := controller.New(tp.Tracer("controller"), dep.RegistrationAPI())
 	_ = server.HandlerWithOptions(impl, server.StdHTTPServerOptions{
 		BaseRouter: mux,
 		Middlewares: []server.MiddlewareFunc{

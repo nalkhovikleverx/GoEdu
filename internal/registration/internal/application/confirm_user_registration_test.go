@@ -31,6 +31,10 @@ func (c *ConfirmUserRegistrationRepoMock) Update(_ context.Context, _ *domain.Us
 	return nil
 }
 
+func (c *ConfirmUserRegistrationRepoMock) GetAll(_ context.Context) []domain.UserRegistration {
+	return []domain.UserRegistration{}
+}
+
 func TestConfirmUserRegistration(t *testing.T) {
 	command := application.ConfirmUserRegistrationCommand{
 		ID: domain.NewUserRegistrationID(),
