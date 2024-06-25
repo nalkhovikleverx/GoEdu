@@ -10,5 +10,6 @@ func FromRequestToRegisterNewUserCommand(registration server.NewRegistration) in
 		FirstName: registration.FirstName,
 		LastName:  registration.LastName,
 		Email:     string(registration.Email),
+		Password:  registration.Password,
 	}
 }
