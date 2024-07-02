@@ -10,73 +10,57 @@ import (
 	"GoEdu/internal/useraccess/internal/domain"
 )
 
-var _ application.UserRegistrationRepository = (*CreateNewUserRepoMock)(nil)
+var _ application.UserRepository = (*CreateNewUserRepoMock)(nil)
 
 type CreateNewUserRepoMock struct {
 	added bool
 }
 
-func (r *CreateNewUserRepoMock) Add(_ context.Context, _ *domain.UserRegistration) error {
+func (r *CreateNewUserRepoMock) Add(_ context.Context, _ *domain.User) error {
 	r.added = true
 	return nil
 }
 func (r CreateNewUserRepoMock) Load(
 	_ context.Context,
-	_ domain.UserRegistrationID) (*domain.UserRegistration, error) {
-	return &domain.UserRegistration{}, nil
+	_ domain.UserEmail) (*domain.User, error) {
+	return &domain.User{}, nil
 }
-func (r CreateNewUserRepoMock) Update(_ context.Context, _ *domain.UserRegistration) error {
+func (r CreateNewUserRepoMock) Update(_ context.Context, _ *domain.User) error {
 	return nil
 }
 
-var _ application.UniqueEmailVerifier = (*UniqueEmailVerifierSpyChecker)(nil)
-
-type UniqueEmailVerifierSpyChecker struct {
-	checked bool
-}
-
-func (u *UniqueEmailVerifierSpyChecker) IsUnique(_ context.Context, _ domain.UserRegistrationEmail) error {
-	u.checked = true
-	return nil
-}
-
-var _ application.PasswordHasher = (*PasswordHasherSpyChecker)(nil)
+var _ application.PasswordManager = (*PasswordHasherSpyChecker)(nil)
 
 type PasswordHasherSpyChecker struct {
 	hashed bool
 }
 
-func (p *PasswordHasherSpyChecker) Hash(password domain.UserPassword) (domain.HashedUserPassword, error) {
+func (p *PasswordHasherSpyChecker) IsEqual(_ domain.UserPassword, _ domain.HashedUserPassword) bool {
 	p.hashed = true
-	return domain.NewHashedUserPassword(password), nil
+	return true
 }
 
 func TestPositiveCreateNewUserRegistration(t *testing.T) {
 	tests := map[string]struct {
-		verifier   *UniqueEmailVerifierSpyChecker
-		hasher     *PasswordHasherSpyChecker
 		repository *CreateNewUserRepoMock
 		command    application.CreateUserCommand
 	}{
 		"successful Create user registration": {
-			verifier:   &UniqueEmailVerifierSpyChecker{},
-			hasher:     &PasswordHasherSpyChecker{},
 			repository: &CreateNewUserRepoMock{},
 			command: application.CreateUserCommand{
 				FirstName: "a",
 				LastName:  "a",
 				Email:     domain.MustNewUserEmail("email@mail.ru"),
-				Password:  domain.MustNewUserPassword("password"),
+				Password:  "password",
 			},
 		},
 	}
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			handler := application.NewCreateUserCommandHandler(tc.hasher, tc.repository)
+			handler := application.NewCreateUserCommandHandler(tc.repository)
 			require.NotNil(t, handler, "handler is nil")
 			_, err := handler.Handle(context.Background(), tc.command)
 			require.Nil(t, err, "error not nil")
-			require.Equal(t, true, tc.hasher.hashed, "password not hashed")
 			require.Equal(t, true, tc.repository.added, "user registration not added")
 		})
 	}

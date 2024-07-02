@@ -9,7 +9,7 @@ import (
 type CreateUserCommand struct {
 	FirstName string
 	LastName  string
-	Email     domain.UserRegistrationEmail
+	Email     domain.UserEmail
 	Password  string
 }
 
@@ -17,12 +17,12 @@ type CreateUserCommandResult struct {
 }
 
 func NewCreateUserCommandHandler(
-	repository UserCreationRepository) *CreateUserCommandHandler {
+	repository UserRepository) *CreateUserCommandHandler {
 	return &CreateUserCommandHandler{repository: repository}
 }
 
 type CreateUserCommandHandler struct {
-	repository UserCreationRepository
+	repository UserRepository
 }
 
 func (r *CreateUserCommandHandler) Handle(ctx context.Context, command Command) (CommandResult, error) {
@@ -35,7 +35,7 @@ func (r *CreateUserCommandHandler) Handle(ctx context.Context, command Command) 
 		return CreateUserCommandResult{}, err
 	}
 
-	user, err := domain.NewUserRegistration(
+	user, err := domain.NewUser(
 		userName,
 		hashedPassword,
 		createUserCommand.Email,

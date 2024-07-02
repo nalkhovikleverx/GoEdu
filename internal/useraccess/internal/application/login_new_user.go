@@ -2,13 +2,14 @@ package application
 
 import (
 	"context"
+	"errors"
 
 	"GoEdu/internal/useraccess/internal/domain"
 )
 
 type LoginCommand struct {
-	Email    string
-	Password string
+	Email    domain.UserEmail
+	Password domain.UserPassword
 }
 
 type LoginCommandResult struct {
@@ -16,16 +17,20 @@ type LoginCommandResult struct {
 }
 
 type UserClaims struct {
-	UserID int
-	Email  string
+	UserID domain.UserID
+	Email  domain.UserEmail
 }
 
-func NewLoginCommandHandler(repository UserCreationRepository) *LoginCommandHandler {
-	return &LoginCommandHandler{repository: repository}
+func NewLoginCommandHandler(repository UserRepository, manager PasswordManager) *LoginCommandHandler {
+	return &LoginCommandHandler{
+		repository:      repository,
+		passwordManager: manager,
+	}
 }
 
 type LoginCommandHandler struct {
-	repository UserCreationRepository
+	repository      UserRepository
+	passwordManager PasswordManager
 }
 
 func (r *LoginCommandHandler) Handle(ctx context.Context, command Command) (CommandResult, error) {
@@ -36,13 +41,14 @@ func (r *LoginCommandHandler) Handle(ctx context.Context, command Command) (Comm
 		return LoginCommandResult{}, err
 	}
 
-	if !user.VerifyPassword(loginCommand.Password) {
+	userS := user.GetUserSnapshot()
+	if !r.passwordManager.IsEqual(loginCommand.Password, userS.Password) {
 		return LoginCommandResult{}, errors.New("invalid email or password")
 	}
 
 	userClaims := UserClaims{
-		UserID: user.ID,
-		Email:  user.Email,
+		UserID: userS.ID,
+		Email:  userS.Email,
 	}
 
 	return LoginCommandResult{userClaims}, nil

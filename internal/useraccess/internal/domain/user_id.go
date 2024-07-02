@@ -2,26 +2,26 @@ package domain
 
 import "github.com/google/uuid"
 
-type UserRegistrationID uuid.UUID
+type UserID uuid.UUID
 
-func NewUserRegistrationID() UserRegistrationID {
-	return UserRegistrationID(uuid.New())
+func NewUserID() UserID {
+	return UserID(uuid.New())
 }
 
-func (u UserRegistrationID) String() string {
+func (u UserID) String() string {
 	return uuid.UUID(u).String()
 }
 
-func ParseUserRegistrationID(urid string) (UserRegistrationID, error) {
+func ParseUserID(urid string) (UserID, error) {
 	uid, err := uuid.Parse(urid)
 	if err != nil {
-		return UserRegistrationID{}, err
+		return UserID{}, err
 	}
-	return UserRegistrationID(uid), nil
+	return UserID(uid), nil
 }
 
-func MustParseUserRegistrationID(urid string) UserRegistrationID {
-	uid, err := ParseUserRegistrationID(urid)
+func MustParseUserID(urid string) UserID {
+	uid, err := ParseUserID(urid)
 	if err != nil {
 		panic(err)
 	}

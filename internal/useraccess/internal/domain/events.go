@@ -2,7 +2,7 @@ package domain
 
 import "time"
 
-type UserRegistrationEvent struct {
+type UserEvent struct {
 	ID               string
 	Email            string
 	Name             string

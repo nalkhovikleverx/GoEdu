@@ -8,24 +8,40 @@ var (
 	ErrUserRegistrationCannotBeConfirmedMoreThanOnce = errors.New("user can't be confirmed more than once")
 )
 
-type UserAuthentication struct {
-	id       UserRegistrationID
-	email    UserRegistrationEmail
+type User struct {
+	id       UserID
+	email    UserEmail
 	userName UserName
-	password string
+	password HashedUserPassword
 }
 
-func NewUserRegistration(
+func NewUser(
 	userName UserName,
 	password string,
-	email UserRegistrationEmail,
-) (*UserAuthentication, error) {
-	return &UserAuthentication{
-		NewUserRegistrationID(),
+	email UserEmail,
+) (*User, error) {
+	return &User{
+		NewUserID(),
 		email,
 		userName,
-		password,
+		NewHashedUserPassword(MustNewUserPassword(password)),
 	}, nil
+}
+
+func (u *User) GetUserSnapshot() *UserSnapshot {
+	return &UserSnapshot{
+		ID:       u.id,
+		Email:    u.email,
+		UserName: u.userName,
+		Password: u.password,
+	}
+}
+
+type UserSnapshot struct {
+	ID       UserID
+	Email    UserEmail
+	UserName UserName
+	Password HashedUserPassword
 }
 
 // func MustCreateUserRegistrationFromSnapshot(snapshot UserRegistrationSnapshot) *UserRegistration {
@@ -53,9 +69,9 @@ func NewUserRegistration(
 // }
 
 // type UserRegistrationSnapshot struct {
-// 	ID               UserRegistrationID
+// 	ID               UserID
 // 	Status           UserRegistrationStatus
-// 	Email            UserRegistrationEmail
+// 	Email            UserEmail
 // 	UserName         UserName
 // 	Password         HashedUserPassword
 // 	RegistrationDate time.Time
@@ -63,9 +79,9 @@ func NewUserRegistration(
 // }
 
 // func MustCreateUserRegistrationSnapshot(
-// 	id UserRegistrationID,
+// 	id UserID,
 // 	status UserRegistrationStatus,
-// 	email UserRegistrationEmail,
+// 	email UserEmail,
 // 	name UserName,
 // 	password HashedUserPassword,
 // 	registrationDate time.Time,

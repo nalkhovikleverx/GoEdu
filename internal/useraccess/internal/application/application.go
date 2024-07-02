@@ -19,16 +19,12 @@ var (
 	ErrUserEmailMustBeUnique = errors.New("user email must be unique")
 )
 
-type UniqueEmailVerifier interface {
-	IsUnique(context.Context, domain.UserRegistrationEmail) error
+type PasswordManager interface {
+	IsEqual(domain.UserPassword, domain.HashedUserPassword) bool
 }
 
-type UniquePasswordVerifier interface {
-	IsUnique(context.Context, domain.HashedUserPassword) error
-}
-
-type UserCreationRepository interface {
-	Add(context.Context, *domain.UserAuthentication) error
-	Load(context.Context, domain.UserAuthentication) (*domain.UserAuthentication, error)
-	Update(context.Context, *domain.UserAuthentication) error
+type UserRepository interface {
+	Add(context.Context, *domain.User) error
+	Load(context.Context, domain.UserEmail) (*domain.User, error)
+	Update(context.Context, *domain.User) error
 }

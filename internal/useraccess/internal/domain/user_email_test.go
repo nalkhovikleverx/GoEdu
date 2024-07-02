@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"GoEdu/internal/registration/internal/domain"
+	"GoEdu/internal/useraccess/internal/domain"
 )
 
 func TestPositiveNewUserEmail(t *testing.T) {

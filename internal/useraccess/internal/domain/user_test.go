@@ -3,32 +3,32 @@ package domain_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"GoEdu/internal/useraccess/internal/domain"
 
-	"GoEdu/internal/registration/internal/domain"
+	"github.com/stretchr/testify/require"
 )
 
 func TestUserRegistration(t *testing.T) {
 	tests := map[string]struct {
 		userName domain.UserName
-		password domain.HashedUserPassword
-		email    domain.UserRegistrationEmail
+		password string
+		email    domain.UserEmail
 	}{
 		"successful creation userRegistration": {
 			userName: domain.MustNewUserName("A", "A"),
-			password: domain.NewHashedUserPassword(domain.MustNewUserPassword("aaaa")),
+			password: "aaa",
 			email:    domain.MustNewUserEmail("aaa@gmail.com"),
 		},
 	}
 
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
-			u, err := domain.NewUserRegistration(
+			u, err := domain.NewUser(
 				tc.userName,
 				tc.password,
 				tc.email,
 			)
-			sh := u.GetSnapshot()
+			sh := u.GetUserSnapshot()
 			require.Nil(t, err)
 			require.Equal(t, tc.password, sh.Password)
 			require.Equal(t, tc.userName.GetFullName(), sh.UserName.GetFullName())

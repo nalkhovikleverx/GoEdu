@@ -3,9 +3,9 @@ package domain_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"GoEdu/internal/useraccess/internal/domain"
 
-	"GoEdu/internal/registration/internal/domain"
+	"github.com/stretchr/testify/require"
 )
 
 func TestPositiveUserPassword(t *testing.T) {
