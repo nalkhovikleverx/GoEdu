@@ -17,6 +17,7 @@ type CommandHandler interface {
 
 var (
 	ErrUserEmailMustBeUnique = errors.New("user email must be unique")
+	ErrNotFound              = errors.New("not found")
 )
 
 type PasswordManager interface {
@@ -25,6 +26,6 @@ type PasswordManager interface {
 
 type UserRepository interface {
 	Add(context.Context, *domain.User) error
-	Load(context.Context, domain.UserEmail) (*domain.User, error)
+	LoadUserByEmail(context.Context, domain.UserEmail) (*domain.User, error)
 	Update(context.Context, *domain.User) error
 }

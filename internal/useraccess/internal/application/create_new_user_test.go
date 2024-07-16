@@ -20,7 +20,7 @@ func (r *CreateNewUserRepoMock) Add(_ context.Context, _ *domain.User) error {
 	r.added = true
 	return nil
 }
-func (r CreateNewUserRepoMock) Load(
+func (r CreateNewUserRepoMock) LoadUserByEmail(
 	_ context.Context,
 	_ domain.UserEmail) (*domain.User, error) {
 	return &domain.User{}, nil

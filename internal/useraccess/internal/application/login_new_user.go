@@ -13,7 +13,7 @@ type LoginCommand struct {
 }
 
 type LoginCommandResult struct {
-	UserClaims
+	userClaims UserClaims
 }
 
 type UserClaims struct {
@@ -36,7 +36,7 @@ type LoginCommandHandler struct {
 func (r *LoginCommandHandler) Handle(ctx context.Context, command Command) (CommandResult, error) {
 	loginCommand := command.(LoginCommand)
 
-	user, err := r.repository.Load(ctx, loginCommand.Email)
+	user, err := r.repository.LoadUserByEmail(ctx, loginCommand.Email)
 	if err != nil {
 		return LoginCommandResult{}, err
 	}

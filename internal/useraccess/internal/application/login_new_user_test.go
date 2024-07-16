@@ -13,16 +13,18 @@ import (
 var _ application.UserRepository = (*LoginUserRepoMock)(nil)
 
 type LoginUserRepoMock struct {
-	added bool
+	added  bool
+	loaded bool
 }
 
 func (r *LoginUserRepoMock) Add(_ context.Context, _ *domain.User) error {
 	r.added = true
 	return nil
 }
-func (r LoginUserRepoMock) Load(
+func (r *LoginUserRepoMock) LoadUserByEmail(
 	_ context.Context,
 	_ domain.UserEmail) (*domain.User, error) {
+	r.loaded = true
 	return &domain.User{}, nil
 }
 func (r LoginUserRepoMock) Update(_ context.Context, _ *domain.User) error {
@@ -51,7 +53,7 @@ func TestPositiveLoginUserAuthentication(t *testing.T) {
 			_, err := handler.Handle(context.Background(), tc.command)
 			require.Nil(t, err, "error not nil")
 			require.Equal(t, true, tc.passwordManager.hashed, "password not hashed")
-			require.Equal(t, true, tc.repository.added, "user registration not added")
+			require.Equal(t, true, tc.repository.loaded, "user registration not loaded")
 		})
 	}
 }

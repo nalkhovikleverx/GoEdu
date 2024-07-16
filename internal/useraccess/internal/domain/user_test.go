@@ -8,13 +8,13 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestUserRegistration(t *testing.T) {
+func TestUserAccess(t *testing.T) {
 	tests := map[string]struct {
 		userName domain.UserName
 		password string
 		email    domain.UserEmail
 	}{
-		"successful creation userRegistration": {
+		"successful creation user_access": {
 			userName: domain.MustNewUserName("A", "A"),
 			password: "aaa",
 			email:    domain.MustNewUserEmail("aaa@gmail.com"),
@@ -30,7 +30,7 @@ func TestUserRegistration(t *testing.T) {
 			)
 			sh := u.GetUserSnapshot()
 			require.Nil(t, err)
-			require.Equal(t, tc.password, sh.Password)
+			require.Equal(t, tc.password, sh.Password.String())
 			require.Equal(t, tc.userName.GetFullName(), sh.UserName.GetFullName())
 			require.Equal(t, tc.email, sh.Email)
 		})
