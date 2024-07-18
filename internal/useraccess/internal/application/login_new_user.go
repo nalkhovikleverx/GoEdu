@@ -41,14 +41,13 @@ func (r *LoginCommandHandler) Handle(ctx context.Context, command Command) (Comm
 		return LoginCommandResult{}, err
 	}
 
-	userS := user.GetUserSnapshot()
-	if !r.passwordManager.IsEqual(loginCommand.Password, userS.Password) {
+	if !r.passwordManager.IsEqual(loginCommand.Password, user.GetPassword()) {
 		return LoginCommandResult{}, errors.New("invalid email or password")
 	}
 
 	userClaims := UserClaims{
-		UserID: userS.ID,
-		Email:  userS.Email,
+		UserID: user.GetID(),
+		Email:  user.GetEmail(),
 	}
 
 	return LoginCommandResult{userClaims}, nil

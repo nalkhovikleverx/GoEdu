@@ -28,11 +28,10 @@ func TestUserAccess(t *testing.T) {
 				tc.password,
 				tc.email,
 			)
-			sh := u.GetUserSnapshot()
 			require.Nil(t, err)
-			require.Equal(t, tc.password, sh.Password.String())
-			require.Equal(t, tc.userName.GetFullName(), sh.UserName.GetFullName())
-			require.Equal(t, tc.email, sh.Email)
+			require.Equal(t, tc.password, u.GetPassword().String())
+			require.Equal(t, tc.userName.GetFullName(), u.GetUserName().GetFullName())
+			require.Equal(t, tc.email, u.GetEmail())
 		})
 	}
 }
