@@ -30,7 +30,7 @@ func TestUserAccess(t *testing.T) {
 			)
 			uS := u.GetUserSnapshot()
 			require.Nil(t, err)
-			require.Equal(t, tc.password, uS.Password)
+			require.Equal(t, tc.password, uS.Password.String())
 			require.Equal(t, tc.userName.GetFullName(), uS.UserName.GetFullName())
 			require.Equal(t, tc.email, uS.Email)
 		})
