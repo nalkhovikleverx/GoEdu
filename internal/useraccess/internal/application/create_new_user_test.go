@@ -29,17 +29,6 @@ func (r CreateNewUserRepoMock) Update(_ context.Context, _ *domain.User) error {
 	return nil
 }
 
-var _ application.PasswordManager = (*PasswordHasherSpyChecker)(nil)
-
-type PasswordHasherSpyChecker struct {
-	hashed bool
-}
-
-func (p *PasswordHasherSpyChecker) IsEqual(_ domain.UserPassword, _ domain.HashedUserPassword) bool {
-	p.hashed = true
-	return true
-}
-
 func TestPositiveCreateNewUserRegistration(t *testing.T) {
 	tests := map[string]struct {
 		repository *CreateNewUserRepoMock

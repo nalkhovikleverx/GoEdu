@@ -21,16 +21,14 @@ type UserClaims struct {
 	Email  domain.UserEmail
 }
 
-func NewLoginCommandHandler(repository UserRepository, manager PasswordManager) *LoginCommandHandler {
+func NewLoginCommandHandler(repository UserRepository) *LoginCommandHandler {
 	return &LoginCommandHandler{
-		repository:      repository,
-		passwordManager: manager,
+		repository: repository,
 	}
 }
 
 type LoginCommandHandler struct {
-	repository      UserRepository
-	passwordManager PasswordManager
+	repository UserRepository
 }
 
 func (r *LoginCommandHandler) Handle(ctx context.Context, command Command) (CommandResult, error) {
@@ -41,13 +39,14 @@ func (r *LoginCommandHandler) Handle(ctx context.Context, command Command) (Comm
 		return LoginCommandResult{}, err
 	}
 
-	if !r.passwordManager.IsEqual(loginCommand.Password, user.GetPassword()) {
+	userS := user.GetUserSnapshot()
+	if user.IsPasswordEqual(loginCommand.Password) {
 		return LoginCommandResult{}, errors.New("invalid email or password")
 	}
 
 	userClaims := UserClaims{
-		UserID: user.GetID(),
-		Email:  user.GetEmail(),
+		UserID: userS.ID,
+		Email:  userS.Email,
 	}
 
 	return LoginCommandResult{userClaims}, nil

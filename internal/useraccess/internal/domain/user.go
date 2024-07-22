@@ -20,18 +20,22 @@ func NewUser(
 	}, nil
 }
 
-func (u User) GetID() UserID {
-	return u.id
+func (u *User) GetUserSnapshot() *UserSnapshot {
+	return &UserSnapshot{
+		ID:       u.id,
+		Email:    u.email,
+		UserName: u.userName,
+		Password: u.password,
+	}
 }
 
-func (u User) GetEmail() UserEmail {
-	return u.email
+func (u *User) IsPasswordEqual(password UserPassword) bool {
+	return NewHashedUserPassword(password) == u.password
 }
 
-func (u User) GetUserName() UserName {
-	return u.userName
-}
-
-func (u User) GetPassword() HashedUserPassword {
-	return u.password
+type UserSnapshot struct {
+	ID       UserID
+	Email    UserEmail
+	UserName UserName
+	Password HashedUserPassword
 }
