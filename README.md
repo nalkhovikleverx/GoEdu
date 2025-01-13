@@ -8,7 +8,7 @@ This is educational and reference project created to demonstrate how can we impl
 
 &nbsp;&nbsp;[1.1 Purpose of this Repository](#11-purpose-of-this-repository)
 
-&nbsp;&nbsp;[1.2 Introducing Problem Space)
+&nbsp;&nbsp;[1.2 Introducing Problem Space](#12-introducing-problem-space)
 
 [2. How to Run](#2-how-to-run)
 
