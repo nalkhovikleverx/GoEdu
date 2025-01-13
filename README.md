@@ -8,6 +8,8 @@ This is educational and reference project created to demonstrate how can we impl
 
 &nbsp;&nbsp;[1.1 Purpose of this Repository](#11-purpose-of-this-repository)
 
+&nbsp;&nbsp;[1.2 Introducing Problem Space)
+
 [2. How to Run](#2-how-to-run)
 
 &nbsp;&nbsp;[2.1 Running the application from scratch](#21-running-the-application-from-scratch)
@@ -33,6 +35,10 @@ This is a list of the main goals of this repository:
 - Get experience of implementing a monolith in a modular way in Go
 - Applying software engineering *best practices* (Clean Architecture, Design Patterns, Testable Design etc)
 - Keeping design artifacts alongside with the source code: **C4 Model**, **OpenAPI spec**, **ADR**
+
+### 1.2 Introducing Problem Space
+
+Problem domain is disscussed [here](https://github.com/nalkhovikleverx/GoEdu/discussions/18)
 
 ## 2. How to Run
 
