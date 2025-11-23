@@ -26,7 +26,7 @@ This is educational and reference project created to demonstrate how can we impl
 
 ## 1. Introduction
 
-![Hexagonal Architecture](https://github.com/nalkhovikleverx/GoEdu/blob/master/docs/images/hexagon.jpg?raw=true)
+![Hexagonal Architecture](https://github.com/nalkhovikleverx/GoEdu/blob/master/docs/technical/images/hexagon.jpg?raw=true)
 
 ### 1.1 Purpose of this Repository
 
