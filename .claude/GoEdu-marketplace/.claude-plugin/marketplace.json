@@ -1,0 +1,16 @@
+{
+  "name": "GoEdu-marketplace",
+  "owner": {
+    "name": "GoEdu Team",
+    "email": "example@example.com"
+  },
+  "plugins": [
+    {
+      "name": "GoEdu-golang",
+      "source": "./plugins/golang",
+      "description": "A plugin for Go programming language",
+      "version": "1.0.0",
+      "category": "software development"
+    }
+  ]
+}

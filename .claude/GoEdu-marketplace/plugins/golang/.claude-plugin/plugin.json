@@ -1,0 +1,9 @@
+{
+  "name": "GoEdu-golang",
+  "description": "A plugin for Go programming language",
+  "version": "1.0.0",
+  "author": {
+    "name": "GoEdu Team"
+  },
+  "keywords": ["golang", "programming", "software development"]
+}
